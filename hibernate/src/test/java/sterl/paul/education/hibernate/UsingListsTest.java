@@ -33,10 +33,16 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * General samples what happens in 1:n relation ships in hibernate.
+ *
+ * @author sterlp
+ */
 public class UsingListsTest {
     // Entities which have a uni relation -- not biderectional
     @Entity
@@ -107,7 +113,7 @@ public class UsingListsTest {
         private String name;
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JoinColumn(name = "order_id")
-        private List<ItemBE> items = new ArrayList<ItemBE>();
+        private List<ItemBE> items = new ArrayList<>();
 
         public OrderBE(String name) {
             this.name = name;
@@ -128,8 +134,8 @@ public class UsingListsTest {
                 .setProperty("hibernate.connection.url", "jdbc:h2:mem:test")
                 .setProperty("hibernate.show_sql", "true")
                 .setProperty("hibernate.hbm2ddl.auto", "create-drop");
-
-        sessionFactory = cfg.buildSessionFactory();
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
+        sessionFactory = cfg.buildSessionFactory(builder.build());
     }
 
     @Test
