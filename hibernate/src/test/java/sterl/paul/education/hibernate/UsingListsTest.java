@@ -19,6 +19,7 @@ package sterl.paul.education.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,12 +30,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -66,13 +69,12 @@ public class UsingListsTest {
     @Data
     @NoArgsConstructor
     private static class OfficeBE {
-
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;
         private String name;
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-        @JoinColumn(name = "room_id")
+        @JoinColumn(name = "room_id", referencedColumnName = "id")
         private List<PersonBE> employees = new ArrayList<PersonBE>();
 
         public OfficeBE(String name) {
@@ -81,6 +83,7 @@ public class UsingListsTest {
     }
 
     // Entities which have a bidirectional binding and are lazy loading
+        // Entities which have a bidirectional binding and are lazy loading
     @Entity
     @Table(name = "ITEM_BE")
     @Data
@@ -111,8 +114,8 @@ public class UsingListsTest {
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;
         private String name;
-        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-        @JoinColumn(name = "order_id")
+        @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "order", orphanRemoval = true)
+        //@JoinColumn(name = "order_id")
         private List<ItemBE> items = new ArrayList<>();
 
         public OrderBE(String name) {
@@ -193,7 +196,7 @@ public class UsingListsTest {
         trx.commit();
         session.close();
     }
-
+    // http://en.wikibooks.org/wiki/Java_Persistence/OneToMany#Undirectional_OneToMany.2C_No_Inverse_ManyToOne.2C_No_Join_Table_.28JPA_2.0_ONLY.29
     @Test
     public void testListPersistenceBidirectionalBindingWrong() {
         Session session = sessionFactory.openSession();
@@ -275,4 +278,110 @@ public class UsingListsTest {
         session.close();
     }
 
+    // make sure all loads are set to eagter
+    @Test
+    public void testLifeInaEagerWorld() {
+        Session session = sessionFactory.openSession();
+        Transaction trx = session.beginTransaction();
+
+        OrderBE order = new OrderBE("Eger Order");
+        order.getItems().add(new ItemBE("Java", order));
+        order.getItems().add(new ItemBE(".NET", order));
+        order.getItems().add(new ItemBE("Rexx", order));
+
+        session.persist(order);
+        trx.commit();
+        session.close();
+
+        session = sessionFactory.openSession();
+        trx = session.beginTransaction();
+
+        System.out.println("*** Lets see what happens if we load one order item of an order with 3 items. ***");
+        System.out.flush();
+        ItemBE item = (ItemBE) session.get(ItemBE.class, order.getItems().get(2).getId());
+
+        trx.commit();
+        session.close();
+    }
+
+    // make sure all loads are set to eagter
+    @Test
+    public void testLifeInaEagerWorldSearch() {
+        Session session = sessionFactory.openSession();
+        Transaction trx = session.beginTransaction();
+
+        session.persist(
+                newOrderWithItems(session, "order 1", "Java", ".NET", "Rexx")
+        );
+        session.persist(
+                newOrderWithItems(session, "order 2", "Java", ".NET", "Rexx")
+        );
+        session.persist(
+                newOrderWithItems(session, "order 3", "Java", ".NET", "Rexx")
+        );
+
+        trx.commit();
+        session.close();
+
+        session = sessionFactory.openSession();
+        trx = session.beginTransaction();
+
+        System.out.println("*** Lets search for an item with a query. ***");
+        System.out.flush();
+        List<ItemBE> items = session.createQuery("SELECT i from ItemBE i"
+                + " LEFT JOIN FETCH i.order"
+                + " WHERE i.name = :itemName")
+                .setParameter("itemName", "Rexx")
+                .list();
+
+        Assert.assertEquals(3, items.size());
+
+        trx.commit();
+        session.close();
+    }
+
+    @Test
+    public void canIlooseAnItem() {
+        Session session = sessionFactory.openSession();
+        Transaction trx = session.beginTransaction();
+
+        OrderBE order = new OrderBE("Eger Order");
+        session.persist(order);
+
+        trx.commit();
+        session.close();
+
+        session = sessionFactory.openSession();
+        trx = session.beginTransaction();
+
+        System.out.println("*** Lets see what happens if we load one order item of an order with 3 items. ***");
+        System.out.flush();
+        OrderBE o = (OrderBE) session.get(OrderBE.class, order.getId());
+
+        session.save(new ItemBE("Rexx", o));
+
+        o.setName("foo");
+        o.getItems().size();
+        session.save(o); // this is not needed!
+        trx.commit();
+        session.close();
+
+        session = sessionFactory.openSession();
+        trx = session.beginTransaction();
+
+        System.out.println("*** Lets see what happens if we load one order item of an order with 3 items. ***");
+        System.out.flush();
+        o = (OrderBE) session.get(OrderBE.class, order.getId());
+        System.out.println("Items " + o.getItems().size());
+    }
+
+    private OrderBE newOrderWithItems(Session session, String orderName, String... itemsNames) {
+        OrderBE result = new OrderBE(orderName);
+        session.save(result);
+        for (String name : itemsNames) {
+
+            session.save(new ItemBE(name, result));
+        }
+        return result;
+    }
 }
