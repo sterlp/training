@@ -9,6 +9,7 @@ import org.sterl.proto.TestMessage;
 import org.sterl.proto.TestMessage.JumpData;
 import org.sterl.proto.TestMessage.MoveData;
 import org.sterl.proto.TestMessage.RequestMessage;
+import org.sterl.proto.TestMessage.RequestMessage.Builder;
 import org.sterl.proto.TestMessage.RequestMessage.MessageType;
 
 public class SerializationProtoTest extends AbstractTest{
@@ -23,15 +24,19 @@ public class SerializationProtoTest extends AbstractTest{
         long messageSize = 0;
         
         RequestMessage read;
+        Builder newBuilder = TestMessage.RequestMessage.newBuilder();
+        org.sterl.proto.TestMessage.JumpData.Builder jumpBulder = JumpData.newBuilder();
+        org.sterl.proto.TestMessage.MoveData.Builder moveBuilder = MoveData.newBuilder();
         for (int i = 0; i < CYCLES; i++) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
             time = System.nanoTime();
-            RequestMessage message = TestMessage.RequestMessage.newBuilder()
+            RequestMessage message = newBuilder
                     .setType(MessageType.JUMP)
-                    .setJumpData(JumpData.newBuilder().setHowFar(10).setHowHigh(650))
-                    .setMoveData(MoveData.newBuilder().setSpeed(500))
+                    .setJumpData(jumpBulder.setHowFar(10).setHowHigh(650))
+                    .setMoveData(moveBuilder.setSpeed(500))
                     .build();
+            newBuilder.clear();
             buildMessage += System.nanoTime() - time;
             
             time = System.nanoTime();

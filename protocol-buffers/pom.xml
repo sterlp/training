@@ -20,6 +20,14 @@
             <artifactId>protobuf-java</artifactId>
             <version>2.6.1</version>
         </dependency>
+        <!--
+        https://github.com/square/wire 
+         -->
+        <dependency>
+          <groupId>com.squareup.wire</groupId>
+          <artifactId>wire-runtime</artifactId>
+          <version>1.8.0</version>
+        </dependency>
 
 
         <dependency>
