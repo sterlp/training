@@ -16,13 +16,6 @@ public class SerializationProtoTest extends AbstractTest{
 
     @Test
     public void testProto() throws Exception {
-        long buildMessage = 0;
-        long serialization = 0;
-        long deserialization = 0;
-       
-        long time = 0;
-        long messageSize = 0;
-        
         RequestMessage read;
         Builder newBuilder = TestMessage.RequestMessage.newBuilder();
         org.sterl.proto.TestMessage.JumpData.Builder jumpBulder = JumpData.newBuilder();
@@ -30,29 +23,28 @@ public class SerializationProtoTest extends AbstractTest{
         for (int i = 0; i < CYCLES; i++) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-            time = System.nanoTime();
+            this.buildMessage.start();
             RequestMessage message = newBuilder
                     .setType(MessageType.JUMP)
                     .setJumpData(jumpBulder.setHowFar(10).setHowHigh(650))
                     .setMoveData(moveBuilder.setSpeed(500))
                     .build();
             newBuilder.clear();
-            buildMessage += System.nanoTime() - time;
+            this.buildMessage.stop();
             
-            time = System.nanoTime();
+            this.serialization.start();
             message.writeTo(out);
-            serialization += System.nanoTime() - time;
+            this.serialization.stop();
             
             byte[] msg = out.toByteArray();
-            time = System.nanoTime();
+            this.deserialization.start();
             read = RequestMessage.parseFrom(msg) ;
-            deserialization += System.nanoTime() - time;
+            this.deserialization.stop();
             
             messageSize = msg.length;
             assertEquals(message, read);
         }
         
-        System.out.println("*** Proto Stats ***");
-        writeStats(buildMessage, serialization, deserialization, messageSize);
+        writeStats("Protocol Buffers Statistics");
     }
 }
