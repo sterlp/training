@@ -17,21 +17,21 @@ public class SerializationWireTest extends AbstractTest{
         RequestMessage read;
         Wire wire = new Wire();
         for (int i = 0; i < CYCLES; i++) {
-            this.buildMessage.start();
+            this.buildMsg.start();
             RequestMessage message = new RequestMessage.Builder()
                     .type(MessageType.JUMP)
                     .jumpData(new JumpData.Builder().howFar(10).howHigh(650).build())
                     .moveData(new MoveData.Builder().speed(500).build())
                     .build();
-            this.buildMessage.stop();
+            this.buildMsg.stop();
             
-            this.serialization.start();
+            this.serialis.start();
             byte[] msg = message.toByteArray();
-            this.serialization.stop();
+            this.serialis.stop();
             
-            this.deserialization.start();
+            this.deserial.start();
             read = wire.parseFrom(msg, RequestMessage.class);
-            this.deserialization.stop();
+            this.deserial.stop();
             
             messageSize = msg.length;
             assertEquals(message, read);

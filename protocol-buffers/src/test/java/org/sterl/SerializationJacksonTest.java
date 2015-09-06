@@ -23,21 +23,21 @@ public class SerializationJacksonTest extends AbstractTest {
         for (int i = 0; i < CYCLES; i++) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-            this.buildMessage.start();
+            this.buildMsg.start();
             RequestMessage message = new RequestMessage();
             message.setType(JacksonType.JUMP);
             message.setJumpData(new JumpData(10, 650));
             message.setMoveData(new MoveData(500));
-            this.buildMessage.stop();
+            this.buildMsg.stop();
             
-            this.serialization.start();
+            this.serialis.start();
             mapper.writeValue(out, message);
-            this.serialization.stop();
+            this.serialis.stop();
             
             byte[] msg = out.toByteArray();
-            this.deserialization.start();
+            this.deserial.start();
             read = mapper.readValue(msg, RequestMessage.class);
-            this.deserialization.stop();
+            this.deserial.stop();
             
             messageSize = msg.length;
             assertEquals(message, read);

@@ -23,23 +23,23 @@ public class SerializationProtoTest extends AbstractTest{
         for (int i = 0; i < CYCLES; i++) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-            this.buildMessage.start();
+            this.buildMsg.start();
             RequestMessage message = newBuilder
                     .setType(MessageType.JUMP)
                     .setJumpData(jumpBulder.setHowFar(10).setHowHigh(650))
                     .setMoveData(moveBuilder.setSpeed(500))
                     .build();
             newBuilder.clear();
-            this.buildMessage.stop();
+            this.buildMsg.stop();
             
-            this.serialization.start();
+            this.serialis.start();
             message.writeTo(out);
-            this.serialization.stop();
+            this.serialis.stop();
             
             byte[] msg = out.toByteArray();
-            this.deserialization.start();
+            this.deserial.start();
             read = RequestMessage.parseFrom(msg) ;
-            this.deserialization.stop();
+            this.deserial.stop();
             
             messageSize = msg.length;
             assertEquals(message, read);
