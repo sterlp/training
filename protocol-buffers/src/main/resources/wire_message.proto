@@ -1,5 +1,6 @@
-package tutorial;
+package org.sterl.wire;
 
+option java_outer_classname="SocketRequest";
 option java_package = "org.sterl.wire";
 
 message RequestMessage {
@@ -9,23 +10,32 @@ message RequestMessage {
         TURN = 2;
         JUMP = 3;
     }
-
     required MessageType type = 1 [default = MOVE];
-
-    optional MoveData moveData = 2;
-    optional TurnData turnData = 3;
-    optional JumpData jumpData = 4;
-}
-// movement data
-message MoveData {
-    required int32 speed = 1 [default = 500]; // how fast the move
-}
-// turn data
-message TurnData {
-    required int32 angle = 1 [default = 90]; // the angle to do
-}
-
-message JumpData {
-    required int32 howHigh = 1 [default = 10]; // how high in cm
-    required int32 howFar = 2 [default = 10]; // how far in cm
+    
+    oneof test_oneof {
+        MoveData moveData = 2;
+        TurnData turnData = 3;
+        JumpData jumpData = 4;
+    }
+    
+    optional string message1 = 5;
+    optional string message2 = 6;
+    
+    repeated MoveData movements = 7;
+    
+    // movement data
+    message MoveData {
+        required int32 speed = 1 [default = 500]; // how fast the move
+        optional string destination = 2;
+    }
+    // turn data
+    message TurnData {
+        required int32 angle = 1 [default = 90]; // the angle to do
+    }
+    
+    message JumpData {
+        required int32 howHigh = 1 [default = 10]; // how high in cm
+        required int32 howFar = 2 [default = 10]; // how far in cm
+        optional string destination = 3;
+    }
 }
