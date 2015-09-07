@@ -26,7 +26,7 @@
 * Message Size: 214 bytes
 * Total time: 2805 ms
 
-# AWS c3.large 2 CPUs 3.75 GB Memory
+# AWS c3.large 2 CPUs 3.75 GB Memory, Java 1.8.0_60
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
@@ -54,7 +54,7 @@
 * Message Size: 214 bytes
 * Total time: 7367 ms
 
-# Android HTC Desire -- 10.000 Cycles
+# Android 5.0.2 HTC One -- 10.000 Cycles
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
@@ -82,7 +82,7 @@
 * Message Size: 214 bytes
 * Total time: 5141 ms
 
-# Android HTC Desire -- 100.000 Cycles
+# Android 5.0.2 HTC One -- 100.000 Cycles
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
