@@ -2,35 +2,35 @@
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
-| Build Message:   | 89          |      89        |      1111750        |      0,0001        |      57        |      0,0004|
-| Serialization:   | 1261        |      1261        |      46777520        |      0,0001        |      964        |      0,0001|
-| Deserialization: | 1945        |      1945        |      25518687        |      0,0001        |      1541        |      0,0001|
+| Build Message:   | 96          |      96          |      999223          |      0,0001        |      58          |      0,0006|
+| Serialization:   | 1264        |      1264        |      57233600        |      0,0001        |      930         |      0,0001|
+| Deserialization: | 2037        |      2037        |      26793114        |      0,0001        |      1585        |      0,0001|
 * Message Size: 396 bytes
-* Total time: 3295 ms
+* Total time: 3397 ms
 
 ## Protocol Buffers Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
-| Build Message:   | 158        |      158        |      625460        |      0,0001        |      120        |      0,0001|
-| Serialization:   | 641        |      641        |      3470191        |      0,0001        |      519        |      0,0001|
-| Deserialization: | 537        |      537        |      2924470        |      0,0001        |      404        |      0,0002|
+| Build Message:   | 186        |      186        |      500976         |      0,0001         |      128        |      0,0001|
+| Serialization:   | 676        |      676        |      4489810        |      0,0001         |      529        |      0,0001|
+| Deserialization: | 622        |      622        |      2541217        |      0,0001         |      439        |      0,0001|
 * Message Size: 214 bytes
-* Total time: 1336 ms
+* Total time: 1484 ms
 
 ## Squareup Wire Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
-| Build Message:   | 286         |      286        |      7399474        |      0,0001        |      188        |      0,0001|
-| Serialization:   | 1334        |      1334        |      4107216        |      0,0001        |      1090        |      0,0002|
-| Deserialization: | 1185        |      1185        |      4425470        |      0,0001        |      917        |      0,0001|
+| Build Message:   | 274         |      274         |      7213193        |      0,0001        |      185         |      0,0001|
+| Serialization:   | 1329        |      1329        |      4584036        |      0,0001        |      1105        |      0,0001|
+| Deserialization: | 1237        |      1237        |      4338794        |      0,0001        |      972         |      0,0001|
 * Message Size: 214 bytes
-* Total time: 2805 ms
+* Total time: 2840 ms
 
 # AWS c3.large 2 CPUs 3.75 GB Memory, Java 1.8.0_60
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
-| Build Message:   | 793         |      793        |      2356681        |      0.0001        |      700        |      0.0001|
+| Build Message:   | 793         |      793         |      2356681         |      0.0001        |      700         |      0.0001|
 | Serialization:   | 2725        |      2725        |      76098740        |      0.0001        |      2252        |      0.0001|
 | Deserialization: | 4537        |      4537        |      43503766        |      0.0001        |      3717        |      0.0001|
 * Message Size: 396 bytes
@@ -39,7 +39,7 @@
 ## Protocol Buffers Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
-| Build Message:   | 1034        |      1034        |      8056119        |      0.0001        |      885        |      0.0006|
+| Build Message:   | 1034        |      1034        |      8056119        |      0.0001        |      885         |      0.0006|
 | Serialization:   | 1682        |      1682        |      4171363        |      0.0001        |      1443        |      0.0001|
 | Deserialization: | 1795        |      1795        |      2961406        |      0.0001        |      1456        |      0.0002|
 * Message Size: 214 bytes
@@ -50,7 +50,7 @@
 |:-----------------|-----------------------------:|-----------------------:| -------------------------:| --------------------------:|-------------------------:|-------------:|
 | Build Message:   | 1259        |      1259        |      11466607        |      0.0001        |      1018        |      0.0001|
 | Serialization:   | 2909        |      2909        |      10472528        |      0.0001        |      2429        |      0.0001|
-| Deserialization: | 3199        |      3199        |      7917387        |      0.0001        |      2459        |      0.0001|
+| Deserialization: | 3199        |      3199        |      7917387         |      0.0001        |      2459        |      0.0001|
 * Message Size: 214 bytes
 * Total time: 7367 ms
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunner {
-    private final int CYCLES = 10000000;
+    private final int CYCLES = 1000000;
     private List<AbstractTest> tests = new ArrayList<>();
     
     public TestRunner()  {
@@ -15,8 +15,10 @@ public class TestRunner {
     
     public StringBuilder runTests() throws Exception {
         StringBuilder result = new StringBuilder();
+        result.append("# Doing test with ").append(CYCLES).append(" cycles\n");
         for (AbstractTest test : tests) {
             System.gc(); // clean for the test
+            Thread.sleep(1000);
             test.doTest(result);
         }
         return result;
