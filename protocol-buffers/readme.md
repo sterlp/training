@@ -1,3 +1,7 @@
+# Links
+
+[Blog & Discussion](http://sterl.org/2015/09/serialization-jackson-vs-google-protocol-buffers/)
+
 # Mac Book Pro i7 2,5 GHz 16 GB Memory 1.8.0_51-b16
 ## Jackson Statistics
 | What             | Total Time in MS             | Average Time in NS     | Slowest in NS             | Slowest in %               |Fastest in NS             | Fastest in % |
