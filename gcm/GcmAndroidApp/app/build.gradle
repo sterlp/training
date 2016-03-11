@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+// using the gms services will not show the notification on dives with older google play, we will just see a warning ...
+//apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+
+    defaultConfig {
+        applicationId "org.sterl.gcm.android"
+        minSdkVersion 18
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
+}
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
+    }
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+
+    // if we use the gms plugin we have to use 8.3.0 instead of 8.4.0, otherwise it won't compile ...
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+
+    apt "org.androidannotations:androidannotations:3.3.2"
+    compile 'org.androidannotations:androidannotations-api:3.3.2'
+
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.7.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+}
