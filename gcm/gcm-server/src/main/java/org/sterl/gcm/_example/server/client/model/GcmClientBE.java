@@ -1,4 +1,4 @@
-package org.sterl.gcm.server.client.model;
+package org.sterl.gcm._example.server.client.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

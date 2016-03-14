@@ -1,4 +1,4 @@
-package org.sterl.gcm.server.msg.smak;
+package org.sterl.gcm.outbound;
 
 import java.util.UUID;
 
@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.transformer.AbstractTransformer;
 import org.springframework.integration.xmpp.XmppHeaders;
 import org.springframework.messaging.Message;
-import org.sterl.gcm.server.msg.model.GcmMessage;
-import org.sterl.gcm.server.msg.model.GcmNotification;
-import org.sterl.gcm.server.msg.model.GcmStringMessage;
+import org.sterl.gcm.api.GcmDownstreamMessage;
+import org.sterl.gcm.api.GcmNotification;
+import org.sterl.gcm.api.GcmStringMessage;
+import org.sterl.gcm.smack.GcmPacketExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,8 +17,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Google has an own type of message format, as so we have to map any message to it.
  * 
  * Furthermore this is a good point to do any serialization needed.
+ * 
+ * <b>Note: This class is only needed if GcmSendingMessageHandler isn't used.</b>
+ * 
  * http://stackoverflow.com/questions/28854835/what-are-the-right-parameters-for-xmpp-connection-spring-integration-to-make-i
  */
+@Deprecated
 public class GcmMessageTransformer extends AbstractTransformer {
     @Autowired ObjectMapper mapper;
     
@@ -29,15 +34,15 @@ public class GcmMessageTransformer extends AbstractTransformer {
         // NO "TO" HERE!!!! Otherwise GCM routes the message to us for some reason ...
         final org.jivesoftware.smack.packet.Message xmppMessage = new org.jivesoftware.smack.packet.Message();
 
-        GcmMessage message;
-        if (msg instanceof GcmMessage) {
-            message = (GcmMessage)msg;
+        GcmDownstreamMessage message;
+        if (msg instanceof GcmDownstreamMessage) {
+            message = (GcmDownstreamMessage)msg;
         } else {
 
             final String to = msgIn.getHeaders().get(XmppHeaders.TO, String.class);
             if (null == to) new IllegalArgumentException("Missing receiver, please set header XmppHeaders.TO. (" + XmppHeaders.TO + ")");
 
-            message = new GcmMessage<>(to, UUID.randomUUID().toString());
+            message = new GcmDownstreamMessage<>(to, UUID.randomUUID().toString());
 
             if (msg instanceof GcmNotification) {
                 message.setNotification((GcmNotification)msg);

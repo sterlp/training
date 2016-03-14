@@ -1,4 +1,4 @@
-package org.sterl.gcm.server.msg.smak;
+package org.sterl.gcm.smack;
 
 import org.jivesoftware.smack.packet.DefaultPacketExtension;
 import org.jivesoftware.smack.util.XmlStringBuilder;

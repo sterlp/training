@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.sterl.org/schema/spring/integration/gcm"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            xmlns:integration="http://www.springframework.org/schema/integration"
+            xmlns:xmpp="http://www.springframework.org/schema/integration/xmpp"
+            targetNamespace="http://www.sterl.org/schema/spring/integration/gcm"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    <xsd:import namespace="http://www.springframework.org/schema/tool"/>
+    <xsd:import namespace="http://www.springframework.org/schema/integration" />
+    <xsd:import namespace="http://www.springframework.org/schema/integration/xmpp" schemaLocation="http://www.springframework.org/schema/integration/xmpp/spring-integration-xmpp-4.2.xsd"/>
+
+    <xsd:element name="inbound-channel-adapter">
+        <xsd:annotation>
+            <xsd:documentation>
+                Configures an endpoint that will forward {@link org.sterl.gcm.api.GcmUpstreamMessage} messages to a MessageChannel.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="xmpp:xmppInboundAdapterType"/>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="outbound-channel-adapter">
+        <xsd:annotation>
+            <xsd:documentation>
+                Configures an endpoint that will publish an updated {@link org.sterl.gcm.api.GcmDownstreamMessage} state on your {@link XMPPConnection } object.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="xmpp:xmppOutboundAdapterType"/>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

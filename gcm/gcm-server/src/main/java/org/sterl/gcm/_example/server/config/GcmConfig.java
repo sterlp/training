@@ -1,16 +1,13 @@
-package org.sterl.gcm.server.config;
+package org.sterl.gcm._example.server.config;
 
 import javax.net.ssl.SSLSocketFactory;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
-import org.jivesoftware.smack.XMPPConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.integration.xmpp.config.XmppConnectionFactoryBean;
-import org.springframework.messaging.MessageChannel;
-import org.sterl.gcm.server.msg.activity.GcmMessageListeningEndpoint;
 
 @Configuration
 @ImportResource("classpath:gcm-xmpp-beans.xml")
@@ -38,7 +35,7 @@ public class GcmConfig {
 
         return connectionFactoryBean;
     }
-    
+    /**
     @Bean 
     public GcmMessageListeningEndpoint inboundAdpater(XMPPConnection connection, MessageChannel gcmInbound) {
         GcmMessageListeningEndpoint endpoint = new GcmMessageListeningEndpoint(connection);
@@ -46,4 +43,5 @@ public class GcmConfig {
         endpoint.setAutoStartup(true);
         return endpoint;
     }
+    */
 }

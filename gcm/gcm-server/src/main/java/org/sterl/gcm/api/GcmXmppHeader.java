@@ -1,4 +1,4 @@
-package org.sterl.gcm.server.msg.smak;
+package org.sterl.gcm.api;
 
 public interface GcmXmppHeader {
 
