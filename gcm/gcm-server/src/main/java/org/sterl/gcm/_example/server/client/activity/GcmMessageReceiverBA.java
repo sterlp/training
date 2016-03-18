@@ -7,7 +7,7 @@ import org.sterl.gcm.api.GcmUpstreamMessage;
 public class GcmMessageReceiverBA {
     private static final Logger LOG = LoggerFactory.getLogger(GcmMessageReceiverBA.class);
     
-    public void handleMessage(GcmUpstreamMessage message) {
-        LOG.info("handleMessage: {}", message);
+    public void handleMessage(Object message) {
+        LOG.info("handleMessage {}: {}", message.getClass(), message);
     }
 }

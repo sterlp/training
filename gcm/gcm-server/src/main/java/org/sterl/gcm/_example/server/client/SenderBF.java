@@ -17,7 +17,6 @@ import org.sterl.gcm.api.GcmNotification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @RestController
@@ -37,10 +36,7 @@ public class SenderBF {
             ++clientSuccess;
         }
     }
-    @Data @AllArgsConstructor
-    static class MessageData {
-        private String message;
-    }
+
     @Autowired private MessageChannel gcmOutbound;
     @Autowired private GcmClientDAO clientDao;
     

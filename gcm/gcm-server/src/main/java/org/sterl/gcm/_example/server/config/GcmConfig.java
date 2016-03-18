@@ -2,8 +2,8 @@ package org.sterl.gcm._example.server.config;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -15,23 +15,20 @@ public class GcmConfig {
 
     @Bean
     public XmppConnectionFactoryBean gcmConnection(){
-        
         // using prod as pre-prod sometimes just didn't work
         // https://developers.google.com/cloud-messaging/ccs#connecting
-        ConnectionConfiguration configuration = new ConnectionConfiguration("gcm-xmpp.googleapis.com", 5235);
-        // needs to be enabled -- even if GCM requires TSL ca can't force it with required
-        configuration.setSecurityMode(SecurityMode.enabled);
-        configuration.setReconnectionAllowed(true);
-        // needs to be false for GCM
-        configuration.setRosterLoadedAtLogin(false);
-        configuration.setSendPresence(false);
-        configuration.setSocketFactory(SSLSocketFactory.getDefault());
-
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+            .setHost("gcm-xmpp.googleapis.com")
+            .setPort(5235)
+            .setSecurityMode(SecurityMode.ifpossible)
+            .setSendPresence(false)
+            .setCompressionEnabled(true)
+            .setSocketFactory(SSLSocketFactory.getDefault())
+            .setServiceName("gcm-sample")
+            .setUsernameAndPassword("234377203703@gcm.googleapis.com", "AIzaSyCySnZ5Ny9jAXtI7Y17co5fv5PSAG9i5-A").build();
         XmppConnectionFactoryBean connectionFactoryBean = new XmppConnectionFactoryBean();
-        connectionFactoryBean.setConnectionConfiguration(configuration);
         
-        connectionFactoryBean.setUser("234377203703@gcm.googleapis.com");
-        connectionFactoryBean.setPassword("AIzaSyCySnZ5Ny9jAXtI7Y17co5fv5PSAG9i5-A");
+        connectionFactoryBean.setConnectionConfiguration(config);
 
         return connectionFactoryBean;
     }

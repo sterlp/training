@@ -3,11 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:int-xmpp="http://www.springframework.org/schema/integration/xmpp"
-    xmlns:int-gcm="http://www.sterl.org/schema/spring/integration/gcm"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/xmpp http://www.springframework.org/schema/integration/xmpp/spring-integration-xmpp.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-		http://www.sterl.org/schema/spring/integration/gcm http://www.sterl.org/schema/spring/integration/gcm/spring-integration-gcm.xsd">
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
     <!-- we can't use the xml here as we have to disable the Roster Load - see bean definition in GcmConfig
     see also http://docs.spring.io/spring-integration/reference/html/xmpp.html#xmpp-advanced
@@ -24,11 +22,18 @@
 
     <!-- Outbound messages to gcm -->
     <int:channel id="gcmOutbound" />
-    <int-gcm:outbound-channel-adapter channel="gcmOutbound" xmpp-connection="gcmConnection" />
+    <int:chain input-channel="gcmOutbound" auto-startup="true" id="outboundChain">
+        <int:transformer>
+            <bean class="org.sterl.gcm.converter.GcmOutboundMessageTransformer" />
+        </int:transformer>
+        <int-xmpp:outbound-channel-adapter xmpp-connection="gcmConnection"/>
+    </int:chain>
 
     <!-- Inbound messages from gcm -->
+    
     <int:channel id="gcmInbound" />
-    <int-gcm:inbound-channel-adapter auto-startup="true" channel="gcmInbound" xmpp-connection="gcmConnection"/>
-    <bean id="gcmMessageReceiverBA" class="org.sterl.gcm._example.server.client.activity.GcmMessageReceiverBA"></bean>
+    <int-xmpp:inbound-channel-adapter channel="gcmInbound" payload-expression="getExtension('google:mobile:data').json" xmpp-connection="gcmConnection" />
+    <bean id="gcmMessageReceiverBA" class="org.sterl.gcm._example.server.client.activity.GcmMessageReceiverBA" />
     <int:service-activator input-channel="gcmInbound" ref="gcmMessageReceiverBA" method="handleMessage" />
+
 </beans>

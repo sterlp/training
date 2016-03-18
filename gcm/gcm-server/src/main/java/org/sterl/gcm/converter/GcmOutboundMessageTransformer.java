@@ -11,10 +11,11 @@
  * either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  */
-package org.sterl.gcm.outbound;
+package org.sterl.gcm.converter;
 
 import java.util.UUID;
 
+import org.jivesoftware.smackx.gcm.packet.GcmPacketExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.transformer.AbstractTransformer;
 import org.springframework.integration.xmpp.XmppHeaders;
@@ -22,7 +23,6 @@ import org.springframework.messaging.Message;
 import org.sterl.gcm.api.GcmDownstreamMessage;
 import org.sterl.gcm.api.GcmNotification;
 import org.sterl.gcm.api.GcmStringMessage;
-import org.sterl.gcm.smack.GcmPacketExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,8 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * http://stackoverflow.com/questions/28854835/what-are-the-right-parameters-for-xmpp-connection-spring-integration-to-make-i
  */
-@Deprecated
-public class GcmMessageTransformer extends AbstractTransformer {
+public class GcmOutboundMessageTransformer extends AbstractTransformer {
     @Autowired ObjectMapper mapper;
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -65,7 +64,6 @@ public class GcmMessageTransformer extends AbstractTransformer {
                 message.setData(msg);
             }
         }
-        xmppMessage.setPacketID(message.getMessageId());
         xmppMessage.addExtension(new GcmPacketExtension(mapper.writeValueAsString(message)));
 
         return xmppMessage;

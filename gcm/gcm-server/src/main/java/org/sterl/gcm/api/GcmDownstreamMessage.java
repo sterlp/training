@@ -111,4 +111,14 @@ public class GcmDownstreamMessage<DataType> {
         this(to, messageId);
         this.data = data;
     }
+    
+    public GcmDownstreamMessage<DataType> setNotification(GcmNotification notification) {
+        this.notification = notification;
+        return this;
+    }
+    
+    public GcmDownstreamMessage<DataType> setData(DataType data) {
+        this.data = data;
+        return this;
+    }
 }
