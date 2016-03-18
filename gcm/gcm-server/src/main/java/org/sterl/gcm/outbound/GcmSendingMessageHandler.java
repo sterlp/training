@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
 import org.sterl.gcm.api.GcmDownstreamMessage;
 import org.sterl.gcm.api.GcmNotification;
 import org.sterl.gcm.api.GcmStringMessage;
+import org.sterl.gcm.api.GcmXmppHeader;
 import org.sterl.gcm.smack.GcmPacketExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,8 +62,13 @@ public class GcmSendingMessageHandler extends AbstractXmppConnectionAwareMessage
             if (downstreamMessage.getMessageId() == null) throw new IllegalArgumentException("Message ID is required!");
         } else {
             final String to = message.getHeaders().get(XmppHeaders.TO, String.class);
+            String messageId = message.getHeaders().get(GcmXmppHeader.MESSAGE_ID, String.class);
+            
+            if (messageId == null) {
+                messageId = UUID.randomUUID().toString();
+            }
 
-            downstreamMessage = new GcmDownstreamMessage<>(to, UUID.randomUUID().toString());
+            downstreamMessage = new GcmDownstreamMessage<>(to, messageId);
 
             if (msg instanceof GcmNotification) {
                 downstreamMessage.setNotification((GcmNotification)msg);

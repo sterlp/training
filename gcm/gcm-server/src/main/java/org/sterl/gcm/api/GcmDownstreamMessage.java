@@ -70,6 +70,7 @@ public class GcmDownstreamMessage<DataType> {
     @JsonProperty("delay_while_idle")
     protected Boolean delayWhileIdle = false;
     
+    /** message priority, high for immediate delivery */
     protected String priority = "high";
     
     /** 
@@ -100,7 +101,7 @@ public class GcmDownstreamMessage<DataType> {
     protected Long ttl;
     
     @JsonProperty("delivery_receipt_requested")
-    protected Boolean deliveryReceipt = true;
+    protected Boolean deliveryReceipt = false;
     
     public GcmDownstreamMessage(String to, String messageId) {
         super();

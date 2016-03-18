@@ -51,7 +51,7 @@ public class SendMessageDialogFragment extends DialogFragment {
                                     Bundle data = new Bundle();
                                     data.putString("message", String.valueOf(message));
                                     String id = UUID.randomUUID().toString();
-                                    gcm.send(to + "@gcm.googleapis.com", id, data);
+                                    gcm.send(to + "@gcm.googleapis.com", id, 60000, data);
                                     msg = "Sent message to " + to;
                                 } catch (IOException ex) {
                                     msg = "Error :" + ex.getMessage();

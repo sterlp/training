@@ -76,6 +76,8 @@ public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndp
                 if (gcmExtension == null || StringUtils.hasText(gcmExtension.getJson())) {
                     final Map<String, ?> mappedHeaders = headerMapper.toHeadersFromRequest(xmppMessage);
 
+                    // TODO ACK / NACK handling here? or add this to the message header?
+
                     try {
                         final GcmUpstreamMessage obj = mapper.readValue(gcmExtension.getJson(), inboundType);
                         sendMessage(MessageBuilder.withPayload(obj).copyHeaders(mappedHeaders).build());
