@@ -24,7 +24,7 @@
 
     <!-- Outbound messages to gcm -->
     <int:channel id="gcmOutbound" />
-    <int-gcm:outbound-channel-adapter channel="gcmOutbound" xmpp-connection="gcmConnection" />
+    <int-gcm:outbound-channel-adapter auto-startup="true" channel="gcmOutbound" xmpp-connection="gcmConnection" />
 
     <!-- Inbound messages from gcm -->
     <int:channel id="gcmInbound" />

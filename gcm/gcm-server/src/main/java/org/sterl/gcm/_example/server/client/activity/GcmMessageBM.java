@@ -15,6 +15,7 @@ package org.sterl.gcm._example.server.client.activity;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class GcmMessageBM {
         return sendNotification(to, new GcmNotification(null, notification, null));
     }
     public Future<GcmUpstreamMessage> sendNotification(String to, GcmNotification notification) {
-        SettableFuture<GcmUpstreamMessage> result = SettableFuture.create();
+        CompletableFuture<GcmUpstreamMessage> result = new CompletableFuture<>();
         
         final String messageId = UUID.randomUUID().toString();
         if (gcmOutbound.send(MessageBuilder.withPayload(notification)
@@ -51,21 +52,19 @@ public class GcmMessageBM {
                 .setHeader(GcmXmppHeader.MESSAGE_ID, messageId).build())) {
             receiverBA.waitFor(messageId, result);
         } else {
-            result.setException(new IOException("Failed to send notification " + notification + " to: " + to));
+            result.completeExceptionally(new IOException("Failed to send notification " + notification + " to: " + to));
         }
-
         return result;
     }
     public <PayloadType> Future<GcmUpstreamMessage> send(String to, PayloadType payload) {
-        SettableFuture<GcmUpstreamMessage> result = SettableFuture.create();
+        CompletableFuture<GcmUpstreamMessage> result = new CompletableFuture<>();
         
         final String messageId = UUID.randomUUID().toString();
         if (gcmOutbound.send(MessageBuilder.withPayload(new GcmDownstreamMessage<PayloadType>(to, messageId, payload)).build())) {
             receiverBA.waitFor(messageId, result);
         } else {
-            result.setException(new IOException("Failed to send message " + payload + " to: " + to));
+            result.completeExceptionally(new IOException("Failed to send message " + payload + " to: " + to));
         }
-
         return result;
     }
 }

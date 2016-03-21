@@ -15,13 +15,11 @@ package org.sterl.gcm.inbound;
 
 import java.util.Map;
 
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.packet.PacketExtension;
-import org.jivesoftware.smack.provider.PacketExtensionProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smackx.gcm.packet.GcmPacketExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,6 @@ import org.springframework.integration.xmpp.support.XmppHeaderMapper;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.sterl.gcm.api.GcmUpstreamMessage;
-import org.sterl.gcm.smack.GcmPacketExtension;
-import org.xmlpull.v1.XmlPullParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,11 +37,21 @@ import lombok.Setter;
 
 /**
  * Equal like ChatMessageListeningEndpoint but for GCM messages
+ * 
+ * Can be replaced with:
+ * <pre>
+ * {@code
+ *  <int:channel id="gcmInbound" />
+ *  <int-xmpp:inbound-channel-adapter channel="gcmInbound" payload-expression="getExtension('google:mobile:data').json" xmpp-connection="gcmConnection" />
+ *  <bean id="gcmMessageReceiverBA" class="org.sterl.gcm._example.server.client.activity.GcmMessageReceiverBA" />
+ *  <int:service-activator input-channel="gcmInbound" ref="gcmMessageReceiverBA" method="handleMessage" />
+ *  }
+ * </pre>
  */
 public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(GcmMessageListeningEndpoint.class);
     @Setter
-    protected PacketListener packetListener = new GcmPacketListener();
+    protected StanzaListener stanzaListener = new GcmPacketListener();
     private ObjectMapper mapper;
     protected XmppHeaderMapper headerMapper = new DefaultXmppHeaderMapper();
     
@@ -54,24 +60,14 @@ public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndp
     
     public GcmMessageListeningEndpoint(XMPPConnection connection) {
         super(connection);
-        
-        // support the JSON GcmPacketExtension for Smack -- otherwise we lose the message
-        ProviderManager.addExtensionProvider(GcmPacketExtension.GCM_ELEMENT_NAME, GcmPacketExtension.GCM_NAMESPACE,
-                new PacketExtensionProvider() {
-                    @Override
-                    public PacketExtension parseExtension(XmlPullParser parser) throws Exception {
-                        String json = parser.nextText();
-                        return new GcmPacketExtension(json);
-                    }
-                });
     }
 
-    class GcmPacketListener implements PacketListener {
+    class GcmPacketListener implements StanzaListener {
         @Override
-        public void processPacket(Packet packet) throws NotConnectedException {
+        public void processPacket(Stanza packet) throws NotConnectedException {
             if (packet instanceof org.jivesoftware.smack.packet.Message) {
                 final org.jivesoftware.smack.packet.Message xmppMessage = (org.jivesoftware.smack.packet.Message) packet;
-                final GcmPacketExtension gcmExtension = (GcmPacketExtension)xmppMessage.getExtension(GcmPacketExtension.GCM_NAMESPACE);
+                final GcmPacketExtension gcmExtension = (GcmPacketExtension)xmppMessage.getExtension(GcmPacketExtension.NAMESPACE);
                 
                 if (gcmExtension == null || StringUtils.hasText(gcmExtension.getJson())) {
                     final Map<String, ?> mappedHeaders = headerMapper.toHeadersFromRequest(xmppMessage);
@@ -96,13 +92,13 @@ public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndp
     @Override
     protected void doStart() {
         Assert.isTrue(this.initialized, this.getComponentName() + " [" + this.getComponentType() + "] must be initialized");
-        this.xmppConnection.addPacketListener(this.packetListener, null);
+        this.xmppConnection.addAsyncStanzaListener(this.stanzaListener, null);
     }
 
     @Override
     protected void doStop() {
         if (this.xmppConnection != null) {
-            this.xmppConnection.removePacketListener(this.packetListener);
+            this.xmppConnection.removeAsyncStanzaListener(this.stanzaListener);
         }
     }
 

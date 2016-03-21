@@ -15,7 +15,9 @@ package org.sterl.gcm.outbound;
 
 import java.util.UUID;
 
+import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smackx.gcm.packet.GcmPacketExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,6 @@ import org.sterl.gcm.api.GcmDownstreamMessage;
 import org.sterl.gcm.api.GcmNotification;
 import org.sterl.gcm.api.GcmStringMessage;
 import org.sterl.gcm.api.GcmXmppHeader;
-import org.sterl.gcm.smack.GcmPacketExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -82,15 +83,15 @@ public class GcmSendingMessageHandler extends AbstractXmppConnectionAwareMessage
 
         // NO "TO" HERE!!!! Otherwise GCM routes the message to us for some reason ...
         final org.jivesoftware.smack.packet.Message xmppMessage = new org.jivesoftware.smack.packet.Message();
-        xmppMessage.setPacketID(downstreamMessage.getMessageId());
+        xmppMessage.setStanzaId(downstreamMessage.getMessageId());
         final GcmPacketExtension gcmPacketExtension = new GcmPacketExtension(mapper.writeValueAsString(downstreamMessage));
         xmppMessage.addExtension(gcmPacketExtension);
 
-        if (!this.xmppConnection.isConnected()) {
-            this.xmppConnection.connect();
+        if (!this.xmppConnection.isConnected() && this.xmppConnection instanceof AbstractXMPPConnection) {
+            ((AbstractXMPPConnection) this.xmppConnection).connect();
         }
         LOG.info("Sending GCM message {}", gcmPacketExtension.getJson());
-        this.xmppConnection.sendPacket(xmppMessage);
+        this.xmppConnection.sendStanza(xmppMessage);
     }
     @Override
     public String getComponentType() {
