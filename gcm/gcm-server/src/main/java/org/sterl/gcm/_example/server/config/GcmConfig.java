@@ -49,8 +49,21 @@ public class GcmConfig {
      * To remove the Roster we have to fix the Spring Xmpp Connection factory as we want to get rid of the dependency -- which otherwise
      * results in a no class def found.
      * 
-     * org.jivesoftware.smack.SmackException$NoResponseException: No response received within reply timeout. Timeout was 5000ms (~5s)
-     *
+     * <pre>
+     * {@code
+     * org.jivesoftware.smack.roster.Roster     : Exception reloading roster
+     * org.jivesoftware.smack.SmackException$NoResponseException: No response received within reply timeout. Timeout was 5000ms (~5s). Used filter: IQReplyFilter: iqAndIdFilter (AndFilter: (OrFilter: (IQTypeFilter: type=error, IQTypeFilter: type=result), StanzaIdFilter: id=qNsJ6-8)), : fromFilter (OrFilter: (FromMatchesFilter (full): null, FromMatchesFilter (bare): 234377203703@gcm.googleapis.com, FromMatchesFilter (full): gcm.googleapis.com)).
+     * at org.jivesoftware.smack.SmackException$NoResponseException.newWith(SmackException.java:106) ~[smack-core-4.1.6.jar:4.1.6]
+     * at org.jivesoftware.smack.AbstractXMPPConnection$6.run(AbstractXMPPConnection.java:1447) [smack-core-4.1.6.jar:4.1.6]
+     * at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) [na:1.8.0_51]
+     * at java.util.concurrent.FutureTask.run(FutureTask.java:266) [na:1.8.0_51]
+     * at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180) [na:1.8.0_51]
+     * at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293) [na:1.8.0_51]
+     * at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [na:1.8.0_51]
+     * at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [na:1.8.0_51]
+     * at java.lang.Thread.run(Thread.java:745) [na:1.8.0_51]
+     * }
+     * </pre>
      */
     public class XmppConnectionFactoryBean extends AbstractFactoryBean<XMPPConnection> implements SmartLifecycle {
 
