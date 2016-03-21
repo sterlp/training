@@ -9,6 +9,10 @@ Please understand this code as a Prove of Concept how it could be solved right n
 ```javascript
 {"message_type":"ack","from":"dUXsJW01LzI:prujZ8cRJB7qrw1vMIg2TWwHUIcCiDOzoccRDbEEZEGP...","message_id":"69c80c45-5f2b-49b4-955b-929b68add39b"}
 ```
+## NACK Message
+```javascript
+{"message_type":"nack","from":"","message_id":"89c6e6a0-0d8c-491f-9eaf-e1302c81da22","error":"INVALID_JSON","error_description":"InvalidJson: MISSING_REGISTRATIONS : Missing \"to\" field"}
+```
 
 ## Receipt
 ```javascript
@@ -18,3 +22,4 @@ Please understand this code as a Prove of Concept how it could be solved right n
 ```javascript
 {"data":{"message":"yhb"},"time_to_live":60000,"from":"dUXsJW01LzI:ISWhbrNse...","message_id":"82fb4063-6bb8-4437-a7ef-20bd12971054","category":"org.sterl.gcm.android"}
 ```
+
