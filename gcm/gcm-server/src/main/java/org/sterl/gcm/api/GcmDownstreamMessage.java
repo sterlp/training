@@ -13,8 +13,6 @@
  */
 package org.sterl.gcm.api;
 
-import java.util.Set;
-
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -38,12 +36,6 @@ public class GcmDownstreamMessage<DataType> {
      */
     @NotNull
     protected String to;
-    /**
-     * This parameter specifies a list of devices (registration tokens, or IDs) receiving a multicast message. It must contain at least 1 and at most 1000 registration tokens.
-     * Use this parameter only for multicast messaging, not for single recipients. Multicast messages (sending to more than 1 registration tokens) are allowed using HTTP JSON format only.
-     */
-    @JsonProperty("registration_ids")
-    protected Set<String> registrationIds;
     /** Unique ID of this message used to map to the ack and nack on the inbound channel */
     @JsonProperty("message_id")
     @NotNull
