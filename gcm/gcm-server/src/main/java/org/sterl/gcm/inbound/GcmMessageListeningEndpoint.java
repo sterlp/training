@@ -28,7 +28,6 @@ import org.springframework.integration.xmpp.core.AbstractXmppConnectionAwareEndp
 import org.springframework.integration.xmpp.support.DefaultXmppHeaderMapper;
 import org.springframework.integration.xmpp.support.XmppHeaderMapper;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.sterl.gcm.api.GcmUpstreamMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,7 +68,9 @@ public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndp
                 final org.jivesoftware.smack.packet.Message xmppMessage = (org.jivesoftware.smack.packet.Message) packet;
                 final GcmPacketExtension gcmExtension = (GcmPacketExtension)xmppMessage.getExtension(GcmPacketExtension.NAMESPACE);
                 
-                if (gcmExtension == null || StringUtils.hasText(gcmExtension.getJson())) {
+                if (gcmExtension == null || gcmExtension.getJson() == null) {
+                    LOG.warn("Received empty or missing GCM extensions {} in message: {}. Message will be ignored!", gcmExtension, packet);
+                } else {
                     final Map<String, ?> mappedHeaders = headerMapper.toHeadersFromRequest(xmppMessage);
 
                     // TODO ACK / NACK handling here? or add this to the message header?
@@ -77,11 +78,11 @@ public class GcmMessageListeningEndpoint extends AbstractXmppConnectionAwareEndp
                     try {
                         final GcmUpstreamMessage obj = mapper.readValue(gcmExtension.getJson(), inboundType);
                         sendMessage(MessageBuilder.withPayload(obj).copyHeaders(mappedHeaders).build());
+                    } catch (RuntimeException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new RuntimeException("Failed to parse value " + gcmExtension.getJson(), e);
                     }
-                } else {
-                    LOG.warn("Received empty or missing GCM extensions {} in message: {}. Message will be ignored!", gcmExtension, packet);
                 }
             } else {
                 LOG.warn("Unsuported Packet {}", packet);

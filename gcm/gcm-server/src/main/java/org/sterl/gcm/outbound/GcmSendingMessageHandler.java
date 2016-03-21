@@ -79,7 +79,7 @@ public class GcmSendingMessageHandler extends AbstractXmppConnectionAwareMessage
                 downstreamMessage.setData(msg);
             }
         }
-        if (null == downstreamMessage.getTo()) new IllegalArgumentException("Missing receiver, please set header XmppHeaders.TO. (" + XmppHeaders.TO + ")");
+        if (null == downstreamMessage.getTo()) throw new IllegalArgumentException("Missing receiver, please set header XmppHeaders.TO. (" + XmppHeaders.TO + ")");
 
         // NO "TO" HERE!!!! Otherwise GCM routes the message to us for some reason ...
         final org.jivesoftware.smack.packet.Message xmppMessage = new org.jivesoftware.smack.packet.Message();

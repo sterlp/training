@@ -25,11 +25,8 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.stereotype.Component;
 import org.sterl.gcm.api.GcmDownstreamMessage;
 import org.sterl.gcm.api.GcmNotification;
-import org.sterl.gcm.api.GcmStringMessage;
 import org.sterl.gcm.api.GcmUpstreamMessage;
 import org.sterl.gcm.api.GcmXmppHeader;
-
-import com.google.common.util.concurrent.SettableFuture;
 
 /**
  * Our message handler for GCM messages, which send messages and returns {@link Future} objects we can listen on.
