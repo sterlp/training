@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.spongycastle.crypto.InvalidCipherTextException;
 import org.spongycastle.crypto.engines.AESEngine;
 import org.spongycastle.crypto.modes.AEADBlockCipher;
 import org.spongycastle.crypto.modes.GCMBlockCipher;
@@ -19,7 +19,6 @@ import org.spongycastle.crypto.params.AEADParameters;
 import org.spongycastle.crypto.params.KeyParameter;
 
 import java.security.SecureRandom;
-import java.security.Security;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -27,14 +26,10 @@ import javax.crypto.SecretKey;
 
 public class MainActivity extends AppCompatActivity {
 
-    // enable BouncyCastleProvider
-    static {
-        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
-    }
-
     private TextView txtOut;
     private EditText txtIn;
     private Button cmdDo;
+    private Button cmdVs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         txtOut = (TextView)findViewById(R.id.txtOut);
         txtIn = (EditText)findViewById(R.id.txtInput);
         cmdDo = (Button)findViewById(R.id.cmdEncrypt);
+        cmdVs = (Button)findViewById(R.id.cmdBuildInVsBouncycastle);
 
         cmdDo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,13 +47,49 @@ public class MainActivity extends AppCompatActivity {
                 new EncryptTask().execute(txtIn.getText());
             }
         });
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            cmdVs.setEnabled(true);
+            cmdVs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new BouncyCastleVsAndroidTask().execute(txtIn.getText());
+                }
+            });
+        }
     }
 
     // generate a shared secret / key -- like a password -- 256 Bit strong
     volatile SecretKey key;
-    private class EncryptTask extends AsyncTask<CharSequence, Void, String> {
-        Exception e = null;
 
+    private abstract class AbstractEncryptTask extends AsyncTask<CharSequence, Void, String> {
+        protected Exception e = null;
+        @Override
+        protected void onPreExecute() {
+            txtOut.setText("Encrypting data ...");
+            txtOut.setEnabled(false);
+            txtIn.setEnabled(false);
+            cmdDo.setEnabled(false);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            txtOut.setEnabled(true);
+            txtIn.setEnabled(true);
+            cmdDo.setEnabled(true);
+
+            txtOut.setText(result);
+
+            if (e == null) {
+                Snackbar.make(findViewById(android.R.id.content), "Encryption & Decryption finished.", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), "Encryption failed! " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                txtOut.setText(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class EncryptTask extends AbstractEncryptTask {
         @Override
         protected String doInBackground(CharSequence... params) {
             try {
@@ -86,18 +118,19 @@ public class MainActivity extends AppCompatActivity {
                     // Android 4.4 or newer ...
 
                     javax.crypto.spec.GCMParameterSpec spec = new javax.crypto.spec.GCMParameterSpec(128, initialVector);
-                    // the JDK version does for some secret reason Padding, so no action needed here ...
+                    // AES/GCM is already a block cypher, no additional padding supported
                     Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 
-                    // encrypt the given message
+                    // doEncrypt the given message
                     cipher.init(Cipher.ENCRYPT_MODE, key, spec);
                     cipher.updateAAD(aad); // optional additional security
                     messageEncrypted = cipher.doFinal(params[0].toString().getBytes("UTF-8"));
 
-                    // decrypt it again
+                    // doDecrypt it again
                     cipher.init(Cipher.DECRYPT_MODE, key, spec);
                     cipher.updateAAD(aad); // optional additional security
                     messageDecrypted = cipher.doFinal(messageEncrypted);
+
                 } else {
                     // Android 4.3 or older ...
 
@@ -108,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
                     AEADBlockCipher cipher = new GCMBlockCipher(new AESEngine());
                     cipher.init(true, spec);
 
-                    messageEncrypted = encrypt(cipher, initialVector, params[0].toString().getBytes("UTF-8"));
+                    messageEncrypted = GcmCipherUtil.doEncrypt(cipher, params[0].toString().getBytes("UTF-8"));
 
                     cipher.init(false, spec);
-                    messageDecrypted = decrypt(cipher, messageEncrypted, 12); // default header in GCM is 12 bit
+                    messageDecrypted = GcmCipherUtil.doDecrypt(cipher, messageEncrypted);
                 }
 
                 // verify that the decrypted message matches the encrypted one
@@ -125,58 +158,53 @@ public class MainActivity extends AppCompatActivity {
             }
             return "";
         }
-        /** encrypt using bouncycastle */
-        private byte[] encrypt(final AEADBlockCipher cipher, final byte[] header, final byte[] data) throws InvalidCipherTextException {
-            final int outSize = header.length + cipher.getOutputSize(data.length);
-            final byte[] output = new byte[outSize];
-            System.arraycopy(header, 0, output, 0, header.length);
+    }
 
-            int outOff = header.length;
-            outOff += cipher.processBytes(data, 0, data.length, output, outOff);
-            cipher.doFinal(output, outOff);
-            cipher.reset();
-            return output;
-        }
 
-        /** decrypt using bouncycastle */
-        private byte[] decrypt(final AEADBlockCipher cipher, final byte[] data, final int inOff) throws InvalidCipherTextException {
-            final int len = data.length - inOff;
-            final int outSize = cipher.getOutputSize(len);
-            final byte[] output = new byte[outSize];
-            int outOff = cipher.processBytes(data, inOff, len, output, 0);
-            outOff += cipher.doFinal(output, outOff);
-            cipher.reset();
-            if (outOff < output.length) {
-                final byte[] temp = new byte[outOff];
-                System.arraycopy(output, 0, temp, 0, outOff);
-                return temp;
-            }
-            return output;
-        }
 
+    private class BouncyCastleVsAndroidTask extends AbstractEncryptTask {
+        private static final String TAG = "AndroidVsBc";
         @Override
-        protected void onPostExecute(String result) {
-            txtOut.setEnabled(true);
-            txtIn.setEnabled(true);
-            cmdDo.setEnabled(true);
+        protected String doInBackground(CharSequence... data) {
+            try {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    final SecureRandom random = new SecureRandom();
+                    KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                    keyGen.init(256, random);
+                    key = keyGen.generateKey();
 
-            txtOut.setText(result);
+                    final byte[] initialVector = new byte[12];
+                    random.nextBytes(initialVector);
+                    final String aad = "my aad";
 
-            if (e == null) {
-                Snackbar.make(findViewById(android.R.id.content), "Encryption & Decryption finished.", Snackbar.LENGTH_LONG).show();
-            } else {
-                Snackbar.make(findViewById(android.R.id.content), "Encryption failed! " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                txtOut.setText(e.getMessage());
-                e.printStackTrace();
+                    byte[] encrypted = GcmCipherUtil.encryptWithOs(key, initialVector, data[0], aad);
+
+                    Log.d(TAG, "DATA size:                      " + GcmCipherUtil.asBytes(data[0]).length);
+                    Log.d(TAG, "OS encrypted size:              " + encrypted.length);
+                    byte[] decrypted = GcmCipherUtil.decryptWithBc(key, initialVector, encrypted, aad);
+                    Log.d(TAG, "BC decrypted size:              " + decrypted.length);
+
+
+                    if (!new String(decrypted, "UTF-8").equals(data[0].toString())) {
+                        e = new IllegalStateException("Decrypt OS Cipher with Bouncycastle decrypt doesn't match " + new String(decrypted, "UTF-8"));
+                    }
+
+                    encrypted = GcmCipherUtil.encryptWithBc(key, initialVector, data[0], aad);
+                    Log.d(TAG, "BC encrypted size:              " + encrypted.length);
+                    decrypted = GcmCipherUtil.decryptWithOs(key, initialVector, encrypted, aad);
+                    Log.d(TAG, "OS decrypted size:              " + decrypted.length);
+
+                    if (!new String(decrypted, "UTF-8").equals(data[0].toString())) {
+                        e = new IllegalStateException("Decrypt BC with OS Cipher decrypt doesn't match " + new String(decrypted, "UTF-8"));
+                    }
+
+                } else {
+                    e = new IllegalStateException("Wrong API version need at least 19 but has " + Build.VERSION.SDK_INT);
+                }
+            } catch (Exception e) {
+                this.e = e;
             }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            txtOut.setText("Encrypting data ...");
-            txtOut.setEnabled(false);
-            txtIn.setEnabled(false);
-            cmdDo.setEnabled(false);
+            return "";
         }
     }
 }

@@ -9,13 +9,31 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.sterl.aesgcm.MainActivity">
 
+    <View
+        android:layout_width="8dp"
+        android:layout_height="0dp"
+        android:id="@+id/center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Encrypt"
         android:id="@+id/cmdEncrypt"
+        android:layout_toLeftOf="@+id/center"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="BC vs. 'Sun'"
+        android:id="@+id/cmdBuildInVsBouncycastle"
+        android:layout_toRightOf="@+id/center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
