@@ -1,4 +1,4 @@
-package org.sterl.training.vaadin.ui.view.dashboard;
+package org.sterl.training.vaadin.ui.view.sales;
 
 import javax.annotation.PostConstruct;
 
@@ -12,14 +12,14 @@ import com.vaadin.spring.annotation.UIScope;
 @Order(2)
 @SpringComponent
 @UIScope
-public class DashboardMenuItem extends ContentMenuItem {
+public class SalesMenuItem extends ContentMenuItem {
     @PostConstruct
     void init() {
-        setIcon(FontAwesome.HOME);
-        setCaption("Dashboard");
+        setIcon(FontAwesome.TABLE);
+        setCaption("Sales");
     }
     @Override
     public String getViewName() {
-        return DashboardView.NAME;
+        return SalesView.NAME;
     }
 }

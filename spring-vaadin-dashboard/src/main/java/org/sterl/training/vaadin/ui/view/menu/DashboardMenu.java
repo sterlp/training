@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.sterl.training.vaadin.session.UserSessionBM;
+import org.sterl.training.vaadin.service.auth.model.LoggedInUser;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
@@ -44,7 +44,7 @@ public final class DashboardMenu extends CustomComponent {
     private MenuItem settingsItem;
     
     private final CssLayout menuItemsLayout = new CssLayout();
-    @Autowired private UserSessionBM userSession;
+    @Autowired private LoggedInUser user;
     @Autowired private List<ContentMenuItem> contentMenuItems = new ArrayList<>();
 
     public DashboardMenu() {
@@ -161,6 +161,7 @@ public final class DashboardMenu extends CustomComponent {
     public void attach() {
         super.attach();
         //updateNotificationsCount(null);
+        settingsItem.setText(user.getName());
     }
     /*
     @Subscribe

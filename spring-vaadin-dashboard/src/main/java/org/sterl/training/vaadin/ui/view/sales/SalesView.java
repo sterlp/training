@@ -1,4 +1,4 @@
-package org.sterl.training.vaadin.ui.view.dashboard;
+package org.sterl.training.vaadin.ui.view.sales;
 
 import javax.annotation.PostConstruct;
 
@@ -12,10 +12,12 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SpringView(name = DashboardView.NAME)
-public class DashboardView extends Panel implements View {
-    public static final String NAME = "DashboardView";
+@SpringView(name = SalesView.NAME)
+public class SalesView extends Panel implements View {
+    public static final String NAME = "SalesView";
+    
     private final VerticalLayout root = new VerticalLayout();
+    
 
     @PostConstruct
     void init() {
@@ -28,7 +30,7 @@ public class DashboardView extends Panel implements View {
         setContent(root);
         Responsive.makeResponsive(root);
 
-        root.addComponent(new PageHeader("Dashboard"));
+        root.addComponent(new PageHeader("Sales"));
     }
 
     @Override

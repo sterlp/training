@@ -1,11 +1,10 @@
 package org.sterl.training.vaadin.event;
 
-import org.sterl.training.vaadin.service.auth.model.User;
+import org.sterl.training.vaadin.service.auth.model.LoggedInUser;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 public class UserLoginRequestedEvent {
-    private final User user;
+    private final LoggedInUser loggedInUser;
 }
