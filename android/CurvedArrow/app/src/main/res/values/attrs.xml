@@ -1,0 +1,14 @@
+<resources>
+    <declare-styleable name="CurvedArrowView">
+        <attr name="arrowColor" format="color" />
+        <attr name="arrowTo" format="enum">
+            <enum name="top" value="0"/>
+            <enum name="top_left" value="1"/>
+            <enum name="top_right" value="2"/>
+
+            <enum name="bottom" value="3"/>
+            <enum name="bottom_left" value="4"/>
+            <enum name="bottom_right" value="5"/>
+        </attr>
+    </declare-styleable>
+</resources>

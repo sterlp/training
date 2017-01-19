@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="org.sterl.training.android.curvedarrow.MainActivity">
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomLeft"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/topRight"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/bottomLeft"
+        android:layout_alignParentEnd="true"/>
+
+    <org.sterl.training.android.curvedarrow.CurvedArrowView
+        app:arrowTo="top_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLeft"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/center"
+        android:id="@+id/arrowTopLeft"/>
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button8"/>
+
+
+    <org.sterl.training.android.curvedarrow.CurvedArrowView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/center"
+        android:layout_below="@+id/topRight"
+        android:layout_alignEnd="@+id/center"
+        android:id="@+id/arrowTop"/>
+
+    <Button
+        android:text="Button"
+        android:layout_width="126dp"
+        android:layout_height="126dp"
+        android:id="@+id/center"
+        android:layout_alignBaseline="@+id/button8"
+        android:layout_alignBottom="@+id/button8"
+        android:layout_alignParentStart="true"/>
+
+
+    <org.sterl.training.android.curvedarrow.CurvedArrowView
+        app:arrowTo="bottom_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topRight"
+        android:layout_above="@+id/button8"
+        android:layout_toEndOf="@+id/center"
+        />
+</RelativeLayout>
