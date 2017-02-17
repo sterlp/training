@@ -9,6 +9,7 @@ import org.sterl.training.vaadin.ui.view.MainView;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
@@ -21,7 +22,8 @@ import com.vaadin.ui.themes.ValoTheme;
 //@Widgetset("DashboardWidgetSet")
 @Push(transport = Transport.WEBSOCKET_XHR)
 @SpringUI
-@Theme("dashboard")
+@Theme("dashboard") // you can delete src/main/resources/VAADIN and replace this with valo default style
+@Title("Vaadin 8 Spring Boot")
 public class DashboardUI extends UI {
 
     @Autowired private MainView mainView;
