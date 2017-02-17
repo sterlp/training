@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.sterl.training.vaadin.common.event.ViewOpened;
 import org.sterl.training.vaadin.service.auth.model.LoggedInUser;
 
 import com.vaadin.server.FontAwesome;
@@ -141,9 +143,24 @@ public final class DashboardMenu extends CustomComponent {
             menuItemsLayout.addComponent(view);
         }
         return menuItemsLayout;
-
     }
     
+    @EventListener
+    void pageChange(ViewOpened event) {
+        final String STYLE_SELECTED = "selected";
+        final String urlName = event.getPanelView().getUrlName();
+        System.err.println("ViewOpened " + event);
+        for (Iterator<Component> iterator = menuItemsLayout.iterator(); iterator.hasNext();) {
+            Component contentMenuItem = iterator.next();
+            if (contentMenuItem instanceof ContentMenuItem && ((ContentMenuItem)contentMenuItem).getViewName().startsWith(urlName)) {
+                System.err.println("SELECTED VIA URL " + contentMenuItem);
+                contentMenuItem .addStyleName(STYLE_SELECTED);
+            } else {
+                contentMenuItem.removeStyleName(STYLE_SELECTED);
+            }
+        }
+    }
+
     private void pageChange(ContentMenuItem menuItem) {
         final String STYLE_SELECTED = "selected";
         for (Iterator<Component> iterator = menuItemsLayout.iterator(); iterator.hasNext();) {

@@ -30,10 +30,7 @@ public class LoginBM {
             // with websocket communication.
             VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
             SecurityContextHolder.getContext().setAuthentication(token);
-            // Now when the session is reinitialized, we can enable websocket communication. Or we could have just
-            // used WEBSOCKET_XHR and skipped this step completely.
-            // UI.getCurrent().getPushConfiguration().setTransport(Transport.WEBSOCKET);
-            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+            
             
             LoggedInUser loggedInUser = context.getBean(LoggedInUser.class);
             loggedInUser.setLoggedIn(true);
@@ -42,7 +39,6 @@ public class LoginBM {
             
             return true;
         } catch (AuthenticationException ex) {
-            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.DISABLED);
             VaadinSession session = VaadinSession.getCurrent();
             if (session != null) {
                 System.err.println("Clear user session ...");

@@ -13,6 +13,7 @@ import com.vaadin.annotations.Title;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -46,7 +47,18 @@ public class DashboardUI extends UI {
             Navigator navigator = new Navigator(this, mainView.getContent());
             navigator.addProvider(viewProvider);
             navigator.addView("", new Navigator.EmptyView());
+            
+            // navigate to first view if needed
+            if (getPage().getUriFragment() != null && getPage().getUriFragment().startsWith("!")) {
+                navigator.navigateTo(getPage().getUriFragment().substring(1));
+            }
+
+            // Now when the session is reinitialized, we can enable websocket communication. Or we could have just
+            // used WEBSOCKET_XHR and skipped this step completely.
+            // UI.getCurrent().getPushConfiguration().setTransport(Transport.WEBSOCKET);
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         } else {
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.DISABLED);
             setContent(loginView);
         }
     }
