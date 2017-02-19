@@ -1,4 +1,4 @@
-# spring-boot-vaading
+# spring-boot-vaadin
 
 A quickstart project including:
 
