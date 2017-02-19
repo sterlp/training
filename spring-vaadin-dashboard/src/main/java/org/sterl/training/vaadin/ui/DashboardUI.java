@@ -1,9 +1,11 @@
 package org.sterl.training.vaadin.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.sterl.training.vaadin.event.UserLoginRequestedEvent;
 import org.sterl.training.vaadin.service.auth.model.LoggedInUser;
+import org.sterl.training.vaadin.ui.view.EventAwareNavigator;
 import org.sterl.training.vaadin.ui.view.LoginView;
 import org.sterl.training.vaadin.ui.view.MainView;
 
@@ -26,7 +28,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @Theme("dashboard") // you can delete src/main/resources/VAADIN and replace this with valo default style
 @Title("Vaadin 8 Spring Boot")
 public class DashboardUI extends UI {
-
+    @Autowired protected ApplicationEventPublisher eventPublisher;
     @Autowired private MainView mainView;
     @Autowired private LoginView loginView;
     @Autowired private SpringViewProvider viewProvider;
@@ -44,10 +46,10 @@ public class DashboardUI extends UI {
         System.err.println("onLogin -> " + user);
         if (user != null && user.isLoggedIn()) {
             setContent(mainView);
-            Navigator navigator = new Navigator(this, mainView.getContent());
+            EventAwareNavigator navigator = new EventAwareNavigator(this, mainView.getContent(), eventPublisher);
             navigator.addProvider(viewProvider);
             navigator.addView("", new Navigator.EmptyView());
-            
+
             // navigate to first view if needed
             if (getPage().getUriFragment() != null && getPage().getUriFragment().startsWith("!")) {
                 navigator.navigateTo(getPage().getUriFragment().substring(1));

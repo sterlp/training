@@ -148,12 +148,10 @@ public final class DashboardMenu extends CustomComponent {
     @EventListener
     void pageChange(ViewOpened event) {
         final String STYLE_SELECTED = "selected";
-        final String urlName = event.getPanelView().getUrlName();
-        System.err.println("ViewOpened " + event);
+        final String urlName = event.getViewName();
         for (Iterator<Component> iterator = menuItemsLayout.iterator(); iterator.hasNext();) {
             Component contentMenuItem = iterator.next();
             if (contentMenuItem instanceof ContentMenuItem && ((ContentMenuItem)contentMenuItem).getViewName().startsWith(urlName)) {
-                System.err.println("SELECTED VIA URL " + contentMenuItem);
                 contentMenuItem .addStyleName(STYLE_SELECTED);
             } else {
                 contentMenuItem.removeStyleName(STYLE_SELECTED);

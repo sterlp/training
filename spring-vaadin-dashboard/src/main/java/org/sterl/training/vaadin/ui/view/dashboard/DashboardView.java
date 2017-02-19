@@ -2,24 +2,21 @@ package org.sterl.training.vaadin.ui.view.dashboard;
 
 import javax.annotation.PostConstruct;
 
-import org.sterl.training.vaadin.common.view.BasePanelView;
 import org.sterl.training.vaadin.ui.component.PageHeader;
 
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Responsive;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SpringView(name = DashboardView.NAME)
-public class DashboardView extends BasePanelView {
+public class DashboardView extends Panel implements View {
     public static final String NAME = "DashboardView";
 
     private final VerticalLayout root = new VerticalLayout();
-
-    public DashboardView() {
-        super(DashboardView.NAME);
-    }
-
 
     @PostConstruct
     void init() {
@@ -33,5 +30,9 @@ public class DashboardView extends BasePanelView {
         Responsive.makeResponsive(root);
 
         root.addComponent(new PageHeader("Dashboard"));
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
     }
 }

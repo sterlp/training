@@ -1,11 +1,18 @@
 package org.sterl.training.vaadin.common.event;
 
-import org.sterl.training.vaadin.common.view.BasePanelView;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
 import lombok.Data;
 
 @Data
 public class ViewOpened {
 
-    private final BasePanelView panelView;
+    private final ViewChangeEvent changeEvent;
+    
+    /**
+     * Name of the view being displayed
+     */
+    public String getViewName() {
+        return changeEvent.getViewName();
+    }
 }
