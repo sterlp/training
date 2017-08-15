@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-xmpp="http://www.springframework.org/schema/integration/xmpp"
+    xmlns:int-gcm="http://www.sterl.org/schema/spring/integration/gcm"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/xmpp http://www.springframework.org/schema/integration/xmpp/spring-integration-xmpp.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.sterl.org/schema/spring/integration/gcm http://www.sterl.org/schema/spring/integration/gcm/spring-integration-gcm.xsd">
+
+    <!-- we can't use the xml here as we have to disable the Roster Load - see bean definition in GcmConfig
+    see also http://docs.spring.io/spring-integration/reference/html/xmpp.html#xmpp-advanced
+    <int-xmpp:xmpp-connection
+        id="gcmConnection"
+        user="234377203703@gcm.googleapis.com"
+        password="AIzaSyCySnZ5Ny9jAXtI7Y17co5fv5PSAG9i5-A"
+        host="gcm-xmpp.googleapis.com"
+        port="5235"
+        auto-startup="true"
+        resource="service-id_test"
+        subscription-mode="accept_all"/>
+     -->
+
+    <!-- Outbound messages to gcm -->
+    <int:channel id="gcmOutbound" />
+    <int-gcm:outbound-channel-adapter auto-startup="true" channel="gcmOutbound" xmpp-connection="gcmConnection" />
+
+    <!-- Inbound messages from gcm -->
+    <int:channel id="gcmInbound" />
+    <int-gcm:inbound-channel-adapter auto-startup="true" channel="gcmInbound" xmpp-connection="gcmConnection"/>
+    <bean id="gcmMessageReceiverBA" class="org.sterl.gcm._example.server.client.activity.GcmMessageReceiverBA"></bean>
+    <int:service-activator input-channel="gcmInbound" ref="gcmMessageReceiverBA" method="handleMessage" />
+</beans>

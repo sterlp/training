@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GCM Android App</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="gcm_project_number">234377203703</string>
+    <string name="backend_url">http://192.168.12.162:8080</string>
+</resources>

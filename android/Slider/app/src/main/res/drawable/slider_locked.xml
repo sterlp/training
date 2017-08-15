@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorLocked"/>
+            <size android:height="60dp" android:width="60dp"></size>
+        </shape>
+    </item>
+
+    <item android:width="60dp" android:height="60dp">
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:drawable="@drawable/ic_lock_outline_black_36dp"
+            android:insetTop="16dp"
+            android:insetLeft="16dp"
+            android:insetRight="16dp"
+            android:insetBottom="16dp"
+            />
+    </item>
+</layer-list>

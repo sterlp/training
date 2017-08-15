@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 .project
 .classpath
 .settings
 /target/
+=======
+target/
+.settings/
+.project
+.classpath
+.idea
+>>>>>>> 69cd5a13fbb17d9b03901d8d6d4b26bdd24a5ca9

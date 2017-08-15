@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="org.sterl.lifecycletest.MainActivity">
+
+    <Button
+        android:text="Test Dialog Fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="goDialogFragment"
+        android:id="@+id/button"/>
+
+    <Button
+        android:text="Test Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button2"
+        android:onClick="goDialog"/>
+
+    <Button
+        android:text="Test Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button3"
+        android:onClick="goCoordinator"/>
+
+    <Button
+        android:text="Start Intent Service twice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/cmdIntentService"
+        android:onClick="doIntentService"/>
+
+    <Button
+        android:text="Start Intent Service and Keep alive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmdIntentService"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/cmdIntentServiceAlive"
+        android:onClick="doIntentServiceAlive"/>
+</RelativeLayout>
