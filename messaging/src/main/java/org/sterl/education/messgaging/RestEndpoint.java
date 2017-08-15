@@ -33,7 +33,7 @@ public class RestEndpoint {
     }
     
     @RequestMapping("/rest/message")
-    public void send() {
-        c.send();
+    public void send() throws Exception {
+        c.slowEndpont(new MessageController.Message(1L, "Slow message", System.currentTimeMillis()));
     }
 }

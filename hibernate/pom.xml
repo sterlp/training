@@ -7,9 +7,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>sterl.paul.education</groupId>
-        <artifactId>education</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+		<groupId>org.sterl.education</groupId>
+		<artifactId>education</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -24,10 +24,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
         </dependency>
 
         <dependency>
