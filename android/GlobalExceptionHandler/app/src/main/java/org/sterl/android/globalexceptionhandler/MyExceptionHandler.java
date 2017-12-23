@@ -34,6 +34,7 @@ public class MyExceptionHandler implements Thread.UncaughtExceptionHandler {
             context.startActivity(registerActivity);
             // make sure we die, otherwise the app will hang ...
             android.os.Process.killProcess(android.os.Process.myPid());
+            // sometimes on older android version killProcess wasn't enough -- strategy pattern should be considered here
             System.exit(0);
         } else {
             rootHandler.uncaughtException(thread, ex);
