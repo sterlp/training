@@ -7,7 +7,6 @@
         <persistence-unit-defaults>
             <entity-listeners>
                 <entity-listener class="org.sterl.education.entitylistener.TimestampEntityListener">
-                    <pre-persist>prePersist</pre-persist>
                 </entity-listener>
             </entity-listeners>
         </persistence-unit-defaults>
