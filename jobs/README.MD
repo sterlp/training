@@ -14,12 +14,14 @@ Demonstrates the usage of Quartz and behavior in case we run in multiple nodes.
 # How to run
 
 1. Build the code
-   mvn clean install -DskipTests=true
+   ```mvn clean install -DskipTests=true```
 2. Start in one window just node (index 2)
-   java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true
+   ```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
 3. Start in a second window a second node (index 1) and trigger 20 jobs
-   java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true
-   
+   ```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
+
+![Output produced](https://github.com/sterlp/training/blob/master/jobs/quartz_two_node_output.png)
+
 # Arguments
 
 1. Index of the node -- *number*
