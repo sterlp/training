@@ -14,11 +14,11 @@ Demonstrates the usage of Quartz and behavior in case we run in multiple nodes.
 # How to run
 
 1. Build the code
-   ```mvn clean install -DskipTests=true```
+```mvn clean install -DskipTests=true```
 2. Start in one window just node (index 2)
-   ```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
+```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
 3. Start in a second window a second node (index 1) and trigger 20 jobs
-   ```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
+```java -jar ./target/jobs-0.0.1-SNAPSHOT.jar 2 0 true```
 
 ![Output produced](https://github.com/sterlp/training/blob/master/jobs/quartz_two_node_output.png)
 
@@ -26,4 +26,4 @@ Demonstrates the usage of Quartz and behavior in case we run in multiple nodes.
 
 1. Index of the node -- *number*
 2. Count of jobs to trigger -- *number*
-3. If a worker should be registered or now -- as it is in a cluster only one nodes has to do so
+3. If a worker should be registered or not -- *boolean* as it is in a cluster only one nodes has to do so
