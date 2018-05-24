@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.sql.DataSource;
 
 import org.postgresql.ds.PGPoolingDataSource;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -14,6 +15,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SchedulerMetaData;
 import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
 import org.quartz.impl.jdbcjobstore.JobStoreTX;
@@ -52,9 +54,13 @@ public class JobsApplication {
         if (jobCount > 0) LOG.info("Triggering now {} jobs ...", jobCount);
         for (int i = 1; i <= jobCount; ++i) {
             scheduler.triggerJob("Job Trigger from " + index + " Job " + i);
+            // fire same job twice ...
+            //scheduler.triggerJob("Job Trigger from " + index + " Job " + i);
         }
         System.in.read(); // wait for enter ...
         scheduler.close();
+        SchedulerMetaData metaData = scheduler.scheduler.getMetaData();
+        LOG.info("Executed " + metaData.getNumberOfJobsExecuted() + " jobs on Node " + index);
     }
     
     @Data
@@ -116,20 +122,23 @@ public class JobsApplication {
     /**
      * New instance of this class is created each time ...
      */
+    //@DisallowConcurrentExecution
     public static class SimpleJob implements Job {
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
             JobDataMap jobDataMap = context.getMergedJobDataMap();
-            LOG.info("Running Job with Data: " 
+            System.err.print("Running Job with Data: " 
                     + jobDataMap.getString(JOB_DATA_NAME) 
                     + " Node Index: " + index
-                    + "... "
+                    + " ."
                     );
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException e) {}
-            LOG.info("... Job finished " + jobDataMap.getString(JOB_DATA_NAME) 
-                    + " Node Index: " + index);
+            for(int i = 0; i <= 10; ++i) {
+                try {
+                    Thread.sleep(1000);
+                    System.err.print(".");
+                } catch (InterruptedException e) {}
+            }
+            System.err.println(" done.");
         }
     }
 }
