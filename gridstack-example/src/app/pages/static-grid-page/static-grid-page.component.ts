@@ -8,10 +8,14 @@ import { GridItemComponent } from 'src/app/static-grid/grid-item/grid-item.compo
 })
 export class StaticGridPageComponent implements OnInit {
 
+  center = {
+    x: 6, y: 6,
+    w: 1, h: 1
+  };
+
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   doMove(comp: GridItemComponent, direction: string, amount?: number) {
     comp.doMove(direction, amount);

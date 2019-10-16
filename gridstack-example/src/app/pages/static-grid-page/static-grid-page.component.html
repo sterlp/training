@@ -2,14 +2,15 @@
     <app-grid-item item-width="2" item-height="2">Top Left</app-grid-item>
     <app-grid-item item-x="11" item-width="2" item-height="2">Top Right</app-grid-item>
 
-    <app-grid-item #midComp item-x="6" item-y="6" item-width="2" item-height="2">
+    <app-grid-item #midComp [(item-x)]="center.x" [(item-y)]="center.y" 
+                             item-width="2" item-height="2">
         Center
         <!-- https://www.w3schools.com/charsets/ref_utf_arrows.asp -->
         <div style="display: flex; flex-direction: column">
             <button (click)="doMove(midComp, 'top')" type="button">&uarr;</button>
             <div style="display: flex; flex-direction: row">
                 <button (click)="doMove(midComp, 'left')" type="button">&larr;</button>
-                <div style="flex-grow: 1;"></div>
+                <div style="flex-grow: 1;"> {{ center.x }}/{{ center.y }}</div>
                 <button (click)="doMove(midComp, 'right')" type="button">&rarr;</button>
             </div>
             <button (click)="doMove(midComp, 'bottom')" type="button">&darr;</button>

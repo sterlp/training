@@ -2,9 +2,14 @@
 Build a simple static grid which allows the user to position elements absolute into the page. The widgets should grow and shrink with the page but stay in their position.
 
 ## Links
+### Libraries
 - https://github.com/gridstack/gridstack.js
-- https://www.whitebyte.info/programming/css/how-to-make-a-div-take-the-remaining-height
+- https://interactjs.io/
 - https://github.com/ramyothman/ng4-gridstack
+
+### Misc
+- https://www.whitebyte.info/programming/css/how-to-make-a-div-take-the-remaining-height
+
 
 ## Commands
 `npm install gridstack --save`

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-declare var $: any; 
+declare var $: any;
 
 /**
  * https://github.com/gridstack/gridstack.js
  * https://www.npmjs.com/package/gridstack
  * http://gridstackjs.com/demo/
  * https://github.com/gridstack/gridstack.js/tree/develop/demo
- * 
+ *
  * https://bl.ocks.org/wheresjames/3689d262f2a0edf98eee0b6ad781e511
  */
 @Component({
@@ -17,8 +17,8 @@ declare var $: any;
 export class GridStackPageComponent implements OnInit {
 
   constructor() {
-    $(function () {
-      var options = {
+    $(() => {
+      const options = {
           height: 12,
           width: 12,
           float: true,

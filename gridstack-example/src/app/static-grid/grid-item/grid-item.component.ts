@@ -1,54 +1,64 @@
-import { Component, OnInit, Input, HostBinding, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, Renderer2, ElementRef, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Attribute, NUMBER_PARSER } from '../attribute.model';
 
 @Component({
   selector: 'app-grid-item',
   templateUrl: './grid-item.component.html',
   styleUrls: ['./grid-item.component.scss']
 })
+/* tslint:disable:variable-name no-output-rename no-input-rename curly*/
 export class GridItemComponent implements OnInit {
 
-  @Input('item-x') x: number = 1;
-  @Input('item-y') y: number = 1;
-  @Input('item-width') width: number = 1;
-  @Input('item-height') height: number = 1;
+  private _x = new Attribute<number>(NUMBER_PARSER, 1);
+  @Output('item-xChange') xChange = this._x.eventEmitter;
+  @Input('item-x') set x(val: number) { this._x.value = val; }
+  get x(): number {return this._x.value; }
+
+  _y = new Attribute<number>(NUMBER_PARSER, 1);
+  @Output('item-yChange') yChange = this._y.eventEmitter;
+  @Input('item-y') set y(value: number) { this._y.value = value; }
+  get y(): number {return this._y.value; }
+
+  @Input('item-width') width = 1;
+  @Input('item-height') height = 1;
 
   constructor(private sanitizer: DomSanitizer,
-    private renderer: Renderer2,
-    private hostElement: ElementRef) { 
+              renderer: Renderer2,
+              hostElement: ElementRef) {
       renderer.addClass(hostElement.nativeElement, 'static-grid-item');
   }
 
   ngOnInit() {
-    if (typeof this.x !== 'number') this.x = parseInt(this.x);
-    if (typeof this.y !== 'number') this.y = parseInt(this.y);
-    if (typeof this.width !== 'number') this.width = parseInt(this.width);
-    if (typeof this.height !== 'number') this.height = parseInt(this.height);
+    if (typeof this.width !== 'number') this.width = parseInt(this.width, 10);
+    if (typeof this.height !== 'number') this.height = parseInt(this.height, 10);
   }
 
-  doMove(direction: string, amount?: number) {
+  doMove(direction: string, amount?: number): void {
     if (typeof amount === 'undefined') amount = 1;
-    if (typeof amount !== 'number') amount = parseInt(amount);
+    else if (typeof amount !== 'number') amount = parseInt(amount, 10);
 
-    if ("left" === direction) {
+    if ('left' === direction) {
       this.x -= amount;
-    } else if ("right" === direction) {
+    } else if ('right' === direction) {
       this.x += amount;
-    } else if ("top" === direction) {
+    } else if ('top' === direction) {
       this.y -= amount;
-    } else if ("bottom" === direction) {
+    } else if ('bottom' === direction) {
       this.y += amount;
     } else {
-      console.info(`doMove call with an unknown direction ${direction} ...`);
+      console.warn(`doMove call with an unknown direction: ${direction}`);
     }
   }
 
-  @HostBinding('style.grid-column') get getColumnStyle() {
+  @HostBinding('style.grid-column')
+  get columnStyle() {
     return this.sanitizer.bypassSecurityTrustStyle(
       `${this.x} / span ${this.width}`
     );
   }
-  @HostBinding('style.grid-row') get getRowStyle() {
+  @HostBinding('style.grid-row')
+  get rowStyle() {
     return this.sanitizer.bypassSecurityTrustStyle(
       `${this.y} / span ${this.height}`
     );
