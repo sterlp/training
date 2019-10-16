@@ -1,0 +1,9 @@
+:host {
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+}
+.grid-content {
+    flex-grow : 1;
+    background: var(--light);
+}

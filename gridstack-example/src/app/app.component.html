@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/grid-stack']" 
+                          routerLinkActive="active">Grid-Stack</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/html-grid']" 
+                            routerLinkActive="active">HTML-Grid</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/static-grid']" 
+                            routerLinkActive="active">Static-Grid</a>
+    </li>
+</ul>
+<div class="grid-content">
+  <router-outlet></router-outlet>
+</div>

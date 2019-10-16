@@ -37,6 +37,10 @@ npm-debug.log
 yarn-error.log
 testem.log
 **/*/typings
+browserslist
+
+# maven
+.mvn
 
 # System Files
 .DS_Store

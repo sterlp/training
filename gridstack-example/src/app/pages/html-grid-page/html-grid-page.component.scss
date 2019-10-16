@@ -1,0 +1,14 @@
+.grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+}
+
+.item {
+    background: var(--gray-dark);
+    color: var(--white);
+    text-align: center;
+    vertical-align: middle;
+}
