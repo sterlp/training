@@ -8,6 +8,7 @@ import { StaticGridPageComponent } from './pages/static-grid-page/static-grid-pa
 import { GridComponent } from './static-grid/grid/grid.component';
 import { GridItemComponent } from './static-grid/grid-item/grid-item.component';
 import { HtmlGridPageComponent } from './pages/html-grid-page/html-grid-page.component';
+import { GridItemControlsComponent } from './static-grid/grid-item-controls/grid-item-controls.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { HtmlGridPageComponent } from './pages/html-grid-page/html-grid-page.com
     GridComponent,
     GridItemComponent,
     HtmlGridPageComponent,
+    GridItemControlsComponent,
   ],
   imports: [
     BrowserModule,

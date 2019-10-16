@@ -75,9 +75,14 @@ export const STRING_PARSER: AttributeParser<string> = (source) => {
     else if (!isString(source)) return '' + source;
     else return source;
 };
+/**
+ * Converts the given value to a number
+ * https://flaviocopes.com/how-to-convert-string-to-number-javascript/
+ * @param source input value
+ */
 export const NUMBER_PARSER: AttributeParser<number> = (source) => {
     if (isUndefined(source)) return null;
-    else if (!isNumber(source)) return Number(source);
+    else if (!isNumber(source)) return source * 1;
     else return source;
 };
 export const INT_PARSER: AttributeParser<number> = (source) => {
