@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, Renderer2, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Renderer2, ElementRef, Output, OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Attribute, NUMBER_PARSER } from '../attribute.model';
 
@@ -8,8 +8,7 @@ import { Attribute, NUMBER_PARSER } from '../attribute.model';
   styleUrls: ['./grid-item.component.scss']
 })
 /* tslint:disable:variable-name no-output-rename no-input-rename curly*/
-export class GridItemComponent implements OnInit {
-
+export class GridItemComponent implements OnInit, OnDestroy {
   private _x = new Attribute<number>(NUMBER_PARSER, 1);
   @Output('item-xChange') xChange = this._x.eventEmitter;
   @Input('item-x') set x(val: number) { this._x.value = val; }
@@ -24,14 +23,18 @@ export class GridItemComponent implements OnInit {
   @Input('item-height') height = 1;
 
   constructor(private sanitizer: DomSanitizer,
-              renderer: Renderer2,
-              hostElement: ElementRef) {
+              private renderer: Renderer2,
+              private hostElement: ElementRef) {
       renderer.addClass(hostElement.nativeElement, 'static-grid-item');
   }
 
   ngOnInit() {
     if (typeof this.width !== 'number') this.width = parseInt(this.width, 10);
     if (typeof this.height !== 'number') this.height = parseInt(this.height, 10);
+  }
+  ngOnDestroy(): void {
+    this._y.complete();
+    this._x.complete();
   }
 
   doMove(direction: string, amount?: number): void {
@@ -51,6 +54,16 @@ export class GridItemComponent implements OnInit {
     }
   }
 
+  doPosition(width: number, height: number) {
+    console.info('doPosition', width, height);
+    this.renderer.setStyle(this.hostElement.nativeElement, 'width', (width * this.width) + '%');
+    this.renderer.setStyle(this.hostElement.nativeElement, 'height', (height * this.height) + '%');
+
+    this.renderer.setStyle(this.hostElement.nativeElement, 'left', ( width * (this.x - 1)) + '%');
+    this.renderer.setStyle(this.hostElement.nativeElement, 'top', ( height * (this.y - 1)) + '%');
+  }
+
+  /*
   @HostBinding('style.grid-column')
   get columnStyle() {
     return this.sanitizer.bypassSecurityTrustStyle(
@@ -63,4 +76,5 @@ export class GridItemComponent implements OnInit {
       `${this.y} / span ${this.height}`
     );
   }
+  */
 }

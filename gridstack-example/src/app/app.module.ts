@@ -9,6 +9,8 @@ import { GridComponent } from './static-grid/grid/grid.component';
 import { GridItemComponent } from './static-grid/grid-item/grid-item.component';
 import { HtmlGridPageComponent } from './pages/html-grid-page/html-grid-page.component';
 import { GridItemControlsComponent } from './static-grid/grid-item-controls/grid-item-controls.component';
+import { CanvasComponent } from './canvas/canvas.component';
+import { CanvasGridPageComponent } from './pages/canvas-grid-page/canvas-grid-page.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { GridItemControlsComponent } from './static-grid/grid-item-controls/grid
     GridItemComponent,
     HtmlGridPageComponent,
     GridItemControlsComponent,
+    CanvasComponent,
+    CanvasGridPageComponent,
   ],
   imports: [
     BrowserModule,

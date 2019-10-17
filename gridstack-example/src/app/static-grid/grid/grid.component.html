@@ -1,7 +1,5 @@
-<div class="static-grid"
+<div #grid class="static-grid"
      [style.width]="width"
-     [style.height]="height"
-     [style.grid-template-columns]="getColumnStyle()"
-     [style.grid-template-rows]="getRowStyle()" >
+     [style.height]="height">
     <ng-content></ng-content>
 </div>
