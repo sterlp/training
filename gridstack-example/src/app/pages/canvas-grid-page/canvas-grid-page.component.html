@@ -1,32 +1,16 @@
-<!--
 <app-canvas></app-canvas>
--->
 
-<app-grid rows="24" columns="24">
-    <app-grid-item item-width="6" item-height="3">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+<ng-static-grid-panel columns="32" rows="24">
+    <ng-container *ngFor="let i of items">
+        <ng-static-grid-item [x]="i.x" [y]="i.y" [width]="i.w" [height]="i.h">
+            <div class="card">
+                <div class="card-body">
+                    {{ i.name }}
+                </div>
             </div>
-        </div>
-    </app-grid-item>
-
-    <app-grid-item item-x="2" item-y="23" item-width="22" item-height="2">
-        <div class="alert alert-primary" role="alert">
-            Footer Info...
-        </div>
-    </app-grid-item>
-    <!-- working here / not working in a nested area e.g. one above
-    <div style="position: absolute; left: 16%; top: 16%; width: 20%; height: 16%;">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Card no Angular</h5>
-                <p class="card-text">For reference to find the issue more easy // move me.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-    </div>
-    -->
-</app-grid>
+        </ng-static-grid-item>
+        <ng-static-grid-item x="14" y="12" width="10" height="2">
+            <h2>Dashboard #24</h2>
+        </ng-static-grid-item>
+    </ng-container>
+</ng-static-grid-panel>

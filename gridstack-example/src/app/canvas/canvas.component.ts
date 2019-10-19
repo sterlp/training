@@ -43,10 +43,62 @@ export class CanvasComponent implements OnInit, AfterContentInit {
         'w', this.canvas.nativeElement.width,
         'h', this.canvas.nativeElement.height);
     }
-    this.draw();
+    this.grawCurvedArrow();
   }
 
-  draw() {
+  grawCurvedArrow() {
+    const canvas = this.canvas.nativeElement;
+    const context: CanvasRenderingContext2D = canvas.getContext('2d');
+
+    context.lineWidth = Math.min(canvas.width, canvas.height) / 7;
+    // https://www.w3schools.com/graphics/canvas_gradients.asp
+    context.strokeStyle = '#ae2424'; //'#ad2323';
+    context.shadowColor = '#656565'; //'#f1cbdb';
+    context.globalAlpha = 0.7;
+
+    const step = 24;
+    const oneX = canvas.width / step; // one step in X
+    const oneY = canvas.height / step; // one step in Y
+    const startX = oneX * 4;
+    const startY = oneY * 8;
+    const endX = oneX * 22;
+    const endY = oneY * 21;
+
+    context.lineWidth = Math.min(oneX, oneY) * 3;
+    context.shadowBlur = context.lineWidth / 3;
+
+    function animate(current: number) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.beginPath();
+      // <----
+      context.moveTo(endX, startY);
+      context.lineTo(startX, startY);
+
+      //   --
+      //  |
+      //   --
+      // https://www.w3schools.com/tags/canvas_beziercurveto.asp
+      context.bezierCurveTo(
+        startX / 16, startY,
+        startX / 16, endY,
+        startX, endY);
+
+      // --->
+      context.lineTo(endX - oneX * 2, endY);
+      context.stroke();
+
+      // >
+      context.beginPath();
+      context.moveTo(endX - oneX * 2, endY);
+      context.lineTo(endX - oneX * 1.9, endY);
+      context.lineTo(endX - oneX * 4, endY - oneY * 2);
+      context.stroke();
+      context.closePath();
+    }
+    animate(1);
+  }
+
+  drawCircle() {
     // requestAnimationFrame Shim
     const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -54,12 +106,12 @@ export class CanvasComponent implements OnInit, AfterContentInit {
     const context = canvas.getContext('2d');
     const x = canvas.width / 2;
     const y = canvas.height / 2;
-    const radius = (x + y) / 2 / 2;
+    const radius = Math.min(x, y) / 2;
     const endPercent = 85;
-    let curPerc = 0;
     const counterClockwise = false;
     const circ = Math.PI * 2;
     const quart = Math.PI / 2;
+    let curPerc = 0;
 
     context.lineWidth = 10;
     context.strokeStyle = '#ad2323';
@@ -67,7 +119,6 @@ export class CanvasComponent implements OnInit, AfterContentInit {
     context.shadowOffsetY = 0;
     context.shadowBlur = 15;
     context.shadowColor = '#656565';
-
 
     function animate(current: number) {
         context.clearRect(0, 0, canvas.width, canvas.height);

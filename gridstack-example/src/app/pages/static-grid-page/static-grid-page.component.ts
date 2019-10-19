@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GridItemComponent } from 'src/app/static-grid/grid-item/grid-item.component';
 
 @Component({
   selector: 'app-static-grid-page',
@@ -8,17 +7,14 @@ import { GridItemComponent } from 'src/app/static-grid/grid-item/grid-item.compo
 })
 export class StaticGridPageComponent implements OnInit {
 
-  center = {
-    x: 6, y: 6,
-    w: 1, h: 1
-  };
-
   constructor() { }
 
+  items = [
+    { x: 0, y: 0, w: 1, h: 1, name: 'Top Left'},
+    { x: 11, y: 0, w: 1, h: 1, name: 'Top Right'},
+    { x: 5, y: 5, w: 2, h: 2, name: 'Center'},
+    { x: 0, y: 11, w: 12, h: 1, name: 'Footer'}
+  ];
+
   ngOnInit() {}
-
-  doMove(comp: GridItemComponent, direction: string, amount?: number) {
-    comp.doMove(direction, amount);
-  }
-
 }

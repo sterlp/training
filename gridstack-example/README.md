@@ -16,6 +16,7 @@ Build a simple static grid which allows the user to position elements absolute i
 `npm install jquery-ui-dist --save`
 `npm install --save-dev @types/jquery`
 `npm install interactjs`
+`npm install popper.js --save`
 
 # Angular Stuff
 

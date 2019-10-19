@@ -1,13 +1,7 @@
-<app-grid>
-    <app-grid-item item-width="2" item-height="2">Top Left</app-grid-item>
-    <app-grid-item item-x="11" item-width="2" item-height="2">Top Right</app-grid-item>
-
-    <app-grid-item #midComp [(item-x)]="center.x" [(item-y)]="center.y" 
-                             item-width="2" item-height="2">
-
-        <app-grid-item-controls [gridItem]="midComp"></app-grid-item-controls>
-
-    </app-grid-item>
-
-    <app-grid-item item-x="2" item-y="12" item-width="10">Footer</app-grid-item>
-</app-grid>
+<ng-static-grid-panel>
+    <ng-container *ngFor="let i of items">
+        <ng-static-grid-item [x]="i.x" [y]="i.y" [width]="i.w" [height]="i.h">
+            {{ i.name }}
+        </ng-static-grid-item>
+    </ng-container>
+</ng-static-grid-panel>

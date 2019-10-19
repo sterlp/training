@@ -1,4 +1,4 @@
-::ng-deep .static-grid-item {
+:host ::ng-deep .static-grid-item {
     background: var(--gray-dark);
     color: var(--white);
     text-align: center;
