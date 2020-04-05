@@ -111,16 +111,6 @@ class IbmReconnectExampleTest {
                 connection.start();
             }
         }
-        public synchronized void connectJms2() throws JMSException {
-            shouldRun.set(true);
-            if (!isConnected()) {
-                JMSContext context = cf.createContext();
-                context.setExceptionListener(this);
-                context.setAutoStart(true);
-                JMSConsumer consumer = context.createConsumer(context.createQueue(destinationQueue));
-                consumer.setMessageListener(this); // register us
-            }
-        }
         public void connectAsync() {
             shouldRun.set(true);
             reconnect(0);
