@@ -9,15 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.jms.Connection;
 import javax.jms.ExceptionListener;
-import javax.jms.JMSConsumer;
-import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,26 +23,26 @@ import org.sterl.training.jms.JmsUtil;
 import org.sterl.training.test.AwaitUtil;
 
 import com.ibm.msg.client.jms.JmsConnectionFactory;
-import com.ibm.msg.client.jms.JmsFactoryFactory;
-import com.ibm.msg.client.wmq.WMQConstants;
 
 import lombok.RequiredArgsConstructor;
 
 /**
  * https://sterl.org/2020/04/reconnecting-jms-listener/ 
  */
-class IbmReconnectExampleTest {
 
-    private static final String QMGR = "PAUL.DEV";
-    private static final String HOST = "paul-dev-eef2.qm.eu-gb.mq.appdomain.cloud";
-    private static final int PORT = 30623;
-    private static final String CHANNEL = "CLOUD.ADMIN.SVRCONN";
+//https://www.ibm.com/support/knowledgecenter/en/SSFKSJ_7.5.0/com.ibm.mq.ref.dev.doc/q111980_.htm
+// doesn't really work
+// cf.setIntProperty(WMQConstants.WMQ_CLIENT_RECONNECT_OPTIONS, WMQConstants.WMQ_CLIENT_RECONNECT); // reconnect!
+// cf.setIntProperty(WMQConstants.WMQ_CLIENT_RECONNECT_TIMEOUT, WMQConstants.WMQ_CLIENT_RECONNECT_TIMEOUT_DEFAULT * 100);
+class IbmReconnectExampleTest extends AbstractIbmJmsTest {
+
     private static final String QUEUE_DESTINATION = "DEV.QUEUE.2";
-
-    private static final String APP_USER = "";
-    private static final String APP_PASSWORD = "";
     
-    @Disabled // manual single execution
+    /**
+     * For this test open your network settings and be ready to cut the connection between you and your JMS Server.
+     * 
+     * This means they should be running on the same host of course ...
+     */
     @Test
     public void reconnectingConsumerTest() throws Exception {
         final String destination = QUEUE_DESTINATION;
@@ -156,8 +153,12 @@ class IbmReconnectExampleTest {
         }
         @Override
         public void onMessage(Message message) {
-            LOG.info("onMessage: {}", message);
-            receivedMessages.incrementAndGet();
+            if (receivedMessages.incrementAndGet() % 2 == 0) {
+                System.out.println("Throwing error in message ...");
+                throw new RuntimeException("Not now I don't like it!");
+            } else {
+                LOG.info("onMessage: {}", message);
+            }
         }
         public boolean isConnected() {
             return connection != null && consumer != null && session != null;
@@ -165,25 +166,5 @@ class IbmReconnectExampleTest {
         public int getReceivedMessageCount() {
             return receivedMessages.get();
         }
-    }
-    
-    private JmsConnectionFactory createConnectionFactory() throws JMSException {
-        JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
-        JmsConnectionFactory cf = ff.createConnectionFactory();
-        cf.setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, QMGR);
-        cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, HOST);
-        cf.setIntProperty(WMQConstants.WMQ_PORT, PORT);
-        cf.setStringProperty(WMQConstants.WMQ_CHANNEL, CHANNEL);
-        cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
-        cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, "JmsPutGet (JMS)");
-        cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
-        cf.setStringProperty(WMQConstants.USERID, APP_USER);
-        cf.setStringProperty(WMQConstants.PASSWORD, APP_PASSWORD);
-        // https://www.ibm.com/support/knowledgecenter/en/SSFKSJ_7.5.0/com.ibm.mq.ref.dev.doc/q111980_.htm
-        // doesn't really work
-        // cf.setIntProperty(WMQConstants.WMQ_CLIENT_RECONNECT_OPTIONS, WMQConstants.WMQ_CLIENT_RECONNECT); // reconnect!
-        // cf.setIntProperty(WMQConstants.WMQ_CLIENT_RECONNECT_TIMEOUT, WMQConstants.WMQ_CLIENT_RECONNECT_TIMEOUT_DEFAULT * 100);
-        //MQConnectionFactory cff;
-        return cf;
     }
 }

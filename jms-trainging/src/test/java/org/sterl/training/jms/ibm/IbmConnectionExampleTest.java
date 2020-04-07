@@ -13,31 +13,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.jms.Connection;
 import javax.jms.Destination;
-import javax.jms.ExceptionListener;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
-import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Session;
 import javax.jms.Topic;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.sterl.training.jms.JmsUtil;
-import org.sterl.training.test.AwaitUtil;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueueManager;
@@ -47,23 +33,11 @@ import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.headers.pcf.PCFMessage;
 import com.ibm.mq.headers.pcf.PCFMessageAgent;
 import com.ibm.msg.client.jms.JmsConnectionFactory;
-import com.ibm.msg.client.jms.JmsFactoryFactory;
-import com.ibm.msg.client.wmq.WMQConstants;
 
-import lombok.RequiredArgsConstructor;
+class IbmConnectionExampleTest extends AbstractIbmJmsTest {
 
-class IbmConnectionExampleTest {
-
-    private static final String QMGR = "PAUL.DEV";
-    private static final String HOST = "paul-dev-eef2.qm.eu-gb.mq.appdomain.cloud";
-    private static final int PORT = 30623;
-    private static final String CHANNEL = "CLOUD.ADMIN.SVRCONN";
     private static final String QUEUE_DESTINATION = "DEV.QUEUE.2";
 
-    private static final String APP_USER = "";
-    private static final String APP_PASSWORD = "";
-    
-    
     @Test
     public void simpleJmsTemplateSendMessageTest() throws Exception {
         JmsConnectionFactory cf = createConnectionFactory();
@@ -138,21 +112,6 @@ class IbmConnectionExampleTest {
         executor.shutdownNow();
     }
     
-    private JmsConnectionFactory createConnectionFactory() throws JMSException {
-        JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
-        JmsConnectionFactory cf = ff.createConnectionFactory();
-        cf.setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, QMGR);
-        cf.setStringProperty(WMQConstants.WMQ_HOST_NAME, HOST);
-        cf.setIntProperty(WMQConstants.WMQ_PORT, PORT);
-        cf.setStringProperty(WMQConstants.WMQ_CHANNEL, CHANNEL);
-        cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
-        cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, "JmsPutGet (JMS)");
-        cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
-        cf.setStringProperty(WMQConstants.USERID, APP_USER);
-        cf.setStringProperty(WMQConstants.PASSWORD, APP_PASSWORD);
-        return cf;
-    }
-
     @DisplayName("List IBM MQ Queues")
     @Test()
     void listQueues() throws Exception {

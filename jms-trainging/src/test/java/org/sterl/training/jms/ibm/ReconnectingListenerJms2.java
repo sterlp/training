@@ -32,24 +32,27 @@ public class ReconnectingListenerJms2 implements MessageListener,  ExceptionList
     private final AtomicInteger receivedMessages = new AtomicInteger(0);
     
     private final JmsConnectionFactory cf;
-    private final String destinationQueue;
+    private final String destinationTopic;
     
     private JMSContext context;
     private JMSConsumer consumer;
 
-    public synchronized void connect() throws JMSException {
+    public ReconnectingListenerJms2 connect() throws JMSException {
         shouldRun.set(true);
         if (!isConnected()) {
             context = cf.createContext();
             context.setExceptionListener(this); // react on errors
             context.setAutoStart(true);
-            consumer = context.createConsumer(context.createQueue(destinationQueue));
-            consumer.setMessageListener(this); // register us
+            final JMSConsumer newConsumer = context.createConsumer(context.createTopic(destinationTopic));
+            newConsumer.setMessageListener(this); // register us
+            consumer = newConsumer; // okay all done!
         }
+        return this;
     }
-    public void connectAsync() {
+    public ReconnectingListenerJms2 connectAsync() {
         shouldRun.set(true);
         reconnect(0);
+        return this;
     }
     public synchronized void disconnect() {
         shouldRun.set(false);
@@ -90,7 +93,11 @@ public class ReconnectingListenerJms2 implements MessageListener,  ExceptionList
     }
     @Override
     public void onMessage(Message message) {
-        LOG.info("onMessage: {}", message);
+        try {
+            LOG.info("onMessage {}: {}",destinationTopic, message.getBody(String.class));
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
         receivedMessages.incrementAndGet();
     }
     public boolean isConnected() {
