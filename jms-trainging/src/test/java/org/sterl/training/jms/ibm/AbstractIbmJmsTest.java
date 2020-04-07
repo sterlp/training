@@ -24,7 +24,7 @@ class AbstractIbmJmsTest {
         cf.setIntProperty(WMQConstants.WMQ_PORT, PORT);
         cf.setStringProperty(WMQConstants.WMQ_CHANNEL, CHANNEL);
         cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT);
-        cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, "JmsPutGet (JMS)");
+        cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, "JMS Training Test Client");
         cf.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, true);
         cf.setStringProperty(WMQConstants.USERID, APP_USER);
         cf.setStringProperty(WMQConstants.PASSWORD, APP_PASSWORD);
