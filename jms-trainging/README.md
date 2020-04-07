@@ -10,7 +10,7 @@ Avoid connection los on network hickups or any JMS server re-start:
 
 Topic Strings used for a simple attach of an audit service.
 
-[Topics](topics_event_sourcing_audit_service.PNG "Topics used")
+![Topics](topics_event_sourcing_audit_service.PNG "Topics used")
 - [Test Class](src/test/java/org/sterl/training/jms/ibm/IbmSubscriptionStringExampleTest.java)
 
 # Useful link for JMS
