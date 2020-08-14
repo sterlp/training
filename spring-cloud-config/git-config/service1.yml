@@ -1,0 +1,3 @@
+config:
+  common: Common value
+  foo: Hello from common service 1
