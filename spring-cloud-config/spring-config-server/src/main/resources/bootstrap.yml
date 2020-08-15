@@ -1,0 +1,27 @@
+server:
+  port: 8000
+  http2:
+    enabled: true
+  ssl:
+    enabled: true
+    key-store-type: jks
+    key-store-password: keystorepass
+    key-password: server_cert_pass
+    key-alias: spring-config-server-cert
+    key-store: classpath:config-server-certs.jks
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/sterlp/spring-cloud-config-repo
+          clone-on-start: true
+          force-pull: true
+          refresh-rate: 60
+  security:
+    user:
+      name: configuser
+      password: configpass
+      
+encrypt:
+  key: my_very_strong_password_for_encryption

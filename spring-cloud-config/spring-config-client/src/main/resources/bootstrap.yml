@@ -2,9 +2,29 @@ spring:
   profiles:
     active: dev
   application:
-    name: foo
+    name: service1
   cloud:
     config:
-      uri: http://localhost:8000
+      uri: https://localhost:8000
+      username: configuser
+      password: configpass
+      request-read-timeout: 5000
+      fail-fast: true
+    refresh:
+      enabled: true
 server:
   port: 8002
+  ssl:
+    enabled: false
+    trust-store: classpath:trust-store.jks
+    key-store-type: jks
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - refresh
+
