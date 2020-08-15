@@ -1,10 +1,23 @@
 # URLs
 
+- Config Repo: https://github.com/sterlp/spring-cloud-config-repo´
+
+## Spring Config Server
 - Config Server: GET https://localhost:8000/service1/dev
-- Payara Client: GET http://localhost:8001/
-- Spring Client: GET http://localhost:8002/
 - Encrypt password: POST https://localhost:8000/encrypt
-- Config Repo: https://github.com/sterlp/spring-cloud-config-repo
+
+## Spring Client
+- Spring Client: GET http://localhost:8002/
+- Reload Config: POST http://localhost:8002/
+
+## Payara Client
+
+- Payara Client: GET http://localhost:8001/
+
+### Commands
+
+- `mvn payara-micro:bundle`
+- `mvn payara-micro:start`
 
 # Config
 
@@ -17,8 +30,13 @@
 
 # Links
 
+- https://docs.payara.fish/enterprise/docs/5.21.0/documentation/ecosystem/maven-plugin.html
+- https://www.tomitribe.com/blog/custom-configsource-with-microprofile-configuration/
 - https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html
 - SSH Private Key Settings: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.2.RELEASE/single/spring-cloud-config.html#_git_ssh_configuration_using_properties
 - https://github.com/spring-cloud/spring-cloud-config
 - https://github.com/spring-cloud-samples/config-repo
 - https://github.com/spring-cloud-samples/config-repo/blob/master/foo-dev.yml
+
+- https://quarkus.io/guides/spring-cloud-config-client
+- https://github.com/quarkusio/quarkus/tree/master/extensions/spring-cloud-config-client
