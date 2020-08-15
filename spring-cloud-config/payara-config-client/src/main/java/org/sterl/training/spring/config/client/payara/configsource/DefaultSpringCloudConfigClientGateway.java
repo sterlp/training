@@ -2,27 +2,29 @@ package org.sterl.training.spring.config.client.payara.configsource;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import javax.net.ssl.SSLContext;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScheme;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CredentialsProvider;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -32,49 +34,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Copy more or less from: 
  * https://github.com/quarkusio/quarkus/blob/master/extensions/spring-cloud-config-client/runtime/src/main/java/io/quarkus/spring/cloud/config/client/runtime/DefaultSpringCloudConfigClientGateway.java
  */
-class DefaultSpringCloudConfigClientGateway {
+class DefaultSpringCloudConfigClientGateway implements AutoCloseable {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final SpringCloudConfigClientConfig springCloudConfigClientConfig;
     private final URI baseURI;
+    private HttpClientBuilder clientBuilder;
+    private CloseableHttpClient client;
+    /** Authorization Header */
+    private final String authz;
     
     DefaultSpringCloudConfigClientGateway(SpringCloudConfigClientConfig springCloudConfigClientConfig) {
         this.springCloudConfigClientConfig = springCloudConfigClientConfig;
         try {
+            if (this.springCloudConfigClientConfig.usernameAndPasswordSet()) {
+                this.authz = "Basic " + springCloudConfigClientConfig.buildBasicAuthz();
+            } else {
+                this.authz = null;
+            }
             this.baseURI = determineBaseUri(springCloudConfigClientConfig);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Value: '" + springCloudConfigClientConfig.url
-                    + "' of property 'quarkus.spring-cloud-config.url' is invalid", e);
+                    + "' of property 'spring-cloud-config.url' is invalid", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-    }
-
-    URI determineBaseUri(SpringCloudConfigClientConfig springCloudConfigClientConfig) throws URISyntaxException {
-        String url = springCloudConfigClientConfig.url;
-        if (null == url || url.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "The 'quarkus.spring-cloud-config.url' property cannot be empty");
-        }
-        if (url.endsWith("/")) {
-            return new URI(url.substring(0, url.length() - 1));
-        }
-        return new URI(url);
     }
 
     Response exchange(String applicationName, String profile) throws Exception {
-        final RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout((int) springCloudConfigClientConfig.connectionTimeout.toMillis())
-                .setSocketTimeout((int) springCloudConfigClientConfig.readTimeout.toMillis())
-                .build();
-        final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
-        try (CloseableHttpClient client = httpClientBuilder.build()) {
+        
+        try {
+            CloseableHttpClient client = getHttpClient();
             final URI finalURI = finalURI(applicationName, profile);
             final HttpGet request = new HttpGet(finalURI);
-            request.addHeader("Accept", "application/json");
+            request.addHeader(HttpHeaders.ACCEPT, "application/json");
+            if (authz != null) request.addHeader(HttpHeaders.AUTHORIZATION, authz);
 
-            HttpClientContext context = setupContext(finalURI);
-            try (CloseableHttpResponse response = client.execute(request, context)) {
+            try (CloseableHttpResponse response = client.execute(request)) {
                 if (response.getStatusLine().getStatusCode() != 200) {
                     throw new RuntimeException("Got unexpected HTTP response code " + response.getStatusLine().getStatusCode()
                             + " from " + finalURI);
@@ -86,71 +85,73 @@ class DefaultSpringCloudConfigClientGateway {
 
                 return OBJECT_MAPPER.readValue(EntityUtils.toString(entity), Response.class);
             }
+        } catch (Exception e) {
+            this.close();
+            throw e;
         }
+    }
+    
+    private CloseableHttpClient getHttpClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+        if (this.clientBuilder == null) {
+            final SSLContext sslContext = new SSLContextBuilder()
+                    .loadTrustMaterial(null, (x509CertChain, authType) -> true)
+                    .build();
+
+            final RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectionRequestTimeout((int) this.springCloudConfigClientConfig.connectionTimeout.toMillis())
+                    .setSocketTimeout((int) this.springCloudConfigClientConfig.readTimeout.toMillis())
+                    .build();
+            clientBuilder = HttpClientBuilder.create()
+                    .setSSLContext(sslContext)
+                    .setConnectionManagerShared(true) // allow the close method
+                    .setConnectionManager(
+                        new PoolingHttpClientConnectionManager(
+                            RegistryBuilder.<ConnectionSocketFactory>create()
+                                .register("http", PlainConnectionSocketFactory.INSTANCE)
+                                .register("https", new SSLConnectionSocketFactory(sslContext,
+                                        NoopHostnameVerifier.INSTANCE))
+                                .build()
+                        )
+                    )
+                    .setDefaultRequestConfig(requestConfig);
+        }
+        if (this.client == null) {
+            this.client = clientBuilder.build();
+        }
+        return client;
+    }
+    
+    private URI determineBaseUri(SpringCloudConfigClientConfig springCloudConfigClientConfig) throws URISyntaxException {
+        String url = springCloudConfigClientConfig.url;
+        if (null == url || url.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The 'spring-cloud-config.url' property cannot be empty");
+        }
+        if (url.endsWith("/")) {
+            return new URI(url.substring(0, url.length() - 1));
+        }
+        return new URI(url);
     }
 
     private URI finalURI(String applicationName, String profile) throws URISyntaxException {
-        URIBuilder result = new URIBuilder(baseURI);
+        URIBuilder result = new URIBuilder(this.baseURI);
         if (result.getPort() == -1) {
             // we need to set the port otherwise auth case doesn't match the request
             result.setPort(result.getScheme().equalsIgnoreCase("http") ? 80 : 443);
         }
-        List<String> finalPathSegments = new ArrayList<>(result.getPathSegments());
+        final List<String> finalPathSegments = new ArrayList<>(result.getPathSegments());
         finalPathSegments.add(applicationName);
         finalPathSegments.add(profile);
         result.setPathSegments(finalPathSegments);
         return result.build();
     }
 
-    private HttpClientContext setupContext(URI finalURI) {
-        final HttpClientContext context = HttpClientContext.create();
-        if ((baseURI.getUserInfo() != null) || springCloudConfigClientConfig.usernameAndPasswordSet()) {
-            final AuthCache authCache = InMemoryAuthCache.INSTANCE;
-            authCache.put(new HttpHost(finalURI.getHost(), finalURI.getPort(), finalURI.getScheme()), new BasicScheme());
-            context.setAuthCache(authCache);
-            if (springCloudConfigClientConfig.usernameAndPasswordSet()) {
-                final CredentialsProvider provider = new BasicCredentialsProvider();
-                final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-                        springCloudConfigClientConfig.username.get(), springCloudConfigClientConfig.password.get());
-                provider.setCredentials(AuthScope.ANY, credentials);
-                context.setCredentialsProvider(provider);
-            }
+    @Override
+    public void close() throws Exception {
+        // reuse of the client is maybe overkill, we could re-create for each request
+        if (client != null) {
+            client.close();
+            client = null;
         }
-        return context;
     }
-
-    /**
-     * We need this class in order to avoid the serialization that Apache HTTP client does by default
-     * and that does not work in GraalVM.
-     * We don't care about caching the auth result since one call is only ever going to be made in any case
-     */
-    private static class InMemoryAuthCache implements AuthCache {
-
-        static final InMemoryAuthCache INSTANCE = new InMemoryAuthCache();
-
-        private final Map<HttpHost, AuthScheme> map = new ConcurrentHashMap<>();
-
-        private InMemoryAuthCache() {
-        }
-
-        @Override
-        public void put(HttpHost host, AuthScheme authScheme) {
-            map.put(host, authScheme);
-        }
-
-        @Override
-        public AuthScheme get(HttpHost host) {
-            return map.get(host);
-        }
-
-        @Override
-        public void remove(HttpHost host) {
-            map.remove(host);
-        }
-
-        @Override
-        public void clear() {
-            map.clear();
-        }
-    };
 }

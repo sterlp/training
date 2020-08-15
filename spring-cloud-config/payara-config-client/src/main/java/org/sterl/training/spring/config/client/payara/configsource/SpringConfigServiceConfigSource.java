@@ -14,28 +14,22 @@ public class SpringConfigServiceConfigSource implements ConfigSource {
     private volatile Map<String, String> config = new LinkedHashMap<>();
 
     public SpringConfigServiceConfigSource() {
-        System.out.println(DefaultSpringCloudConfigClientGateway.class.getResource("/trust-store.jks"));
-        System.setProperty("javax.net.ssl.trustStore", DefaultSpringCloudConfigClientGateway.class.getResource("/trust-store.jks").getFile()); 
-        System.setProperty("javax.net.ssl.trustStoreType", "jks");
-        
         SpringCloudConfigClientConfig config = new SpringCloudConfigClientConfig();
         springGateway = new DefaultSpringCloudConfigClientGateway(config);
         reload();
     }
     
     public void reload() {
+        System.out.println("-> reload");
         try {
-            Map<String, String> newConfig = new LinkedHashMap<>();
-            
-            Response exchange = springGateway.exchange("service1", "dev");
-            List<PropertySource> propertySources = exchange.getPropertySources();
-            for (int i = propertySources.size(); i > 0; --i) {
+            final Map<String, String> newConfig = new LinkedHashMap<>();
+            final Response exchange = springGateway.exchange("service1", "dev");
+            final List<PropertySource> propertySources = exchange.getPropertySources();
+            for (int i = propertySources.size() - 1; i >= 0 ; i--) {
                 PropertySource propertySource = propertySources.get(i);
-                
                 newConfig.putAll(propertySource.getSource());
             }
             config = newConfig;
-            System.out.println("Loaded: " + config);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -49,11 +43,13 @@ public class SpringConfigServiceConfigSource implements ConfigSource {
 
     @Override
     public Map<String, String> getProperties() {
+        System.out.println("-> getProperties");
         return config;
     }
 
     @Override
     public String getValue(String propertyName) {
+        System.out.println("-> getValue: " + propertyName);
         return config.get(propertyName);
     }
 

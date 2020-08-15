@@ -8,11 +8,12 @@
 
 ## Spring Client
 - Spring Client: GET http://localhost:8002/
-- Reload Config: POST http://localhost:8002/
+- Reload Config: POST http://localhost:8002/actuator/refresh
 
 ## Payara Client
 
 - Payara Client: GET http://localhost:8001/
+- Payara Client: POST http://localhost:8001/refresh
 
 ### Commands
 
@@ -40,3 +41,5 @@
 
 - https://quarkus.io/guides/spring-cloud-config-client
 - https://github.com/quarkusio/quarkus/tree/master/extensions/spring-cloud-config-client
+
+- https://rmannibucau.metawerx.net/post/deltaspike-configuration-reloadable

@@ -1,21 +1,12 @@
 package org.sterl.training.spring.config.client.payara.configsource;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Optional;
 
 public class SpringCloudConfigClientConfig {
 
-    protected static final String NAME = "spring-cloud-config";
-
-    /**
-     * If enabled, will try to read the configuration from a Spring Cloud Config Server
-     */
-    public boolean enabled = true;
-
-    /**
-     * If set to true, the application will not stand up if it cannot obtain configuration from the Config Server
-     */
-    public boolean failFast = true;
 
     /**
      * The Base URI where the Spring Cloud Config Server is available
@@ -48,5 +39,9 @@ public class SpringCloudConfigClientConfig {
 
     public boolean usernameAndPasswordSet() {
         return username.isPresent() && password.isPresent();
+    }
+    
+    public String buildBasicAuthz() throws UnsupportedEncodingException {
+        return Base64.getEncoder().encodeToString((username.get() + ":" + password.get()).getBytes("UTF-8"));
     }
 }

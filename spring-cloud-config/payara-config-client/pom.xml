@@ -69,12 +69,6 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.12</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 
@@ -89,7 +83,7 @@
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-testcontainers</artifactId>
             <version>0.9</version>
-            <scope>${version.microshed.testing}</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.microshed</groupId>
@@ -101,12 +95,6 @@
             <groupId>fish.payara.extras</groupId>
             <artifactId>payara-micro</artifactId>
             <version>${version.payara}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
