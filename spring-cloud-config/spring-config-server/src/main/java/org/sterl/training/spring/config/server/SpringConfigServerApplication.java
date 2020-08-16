@@ -30,8 +30,7 @@ class SecuritySettings extends WebSecurityConfigurerAdapter {
             .httpBasic()
          .and()
             .authorizeRequests()
-            .antMatchers("/encrypt/**").authenticated()
-            .antMatchers("/decrypt/**").authenticated()
+            .antMatchers("/**").authenticated()
         ;
     }
 }
