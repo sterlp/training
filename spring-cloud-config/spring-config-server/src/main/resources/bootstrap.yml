@@ -21,7 +21,7 @@ spring:
   security:
     user:
       name: configuser
-      password: configpass
+      password: $2a$10$Phw6zstCebSAbJrkcwoRQ.DEv7NY1ZROoqzIQKZfNk17IgEmLr2E6
       
 encrypt:
   key: my_very_strong_password_for_encryption

@@ -6,6 +6,15 @@
 - Config Server: GET https://localhost:8000/service1/dev
 - Encrypt password: POST https://localhost:8000/encrypt
 
+### Credentials
+- username: configuser
+- password: configpass
+
+### Configured users
+- user1:pass1
+- user2:pass2
+- user3:pass3
+
 ## Spring Client
 - Spring Client: GET http://localhost:8002/
 - Reload Config: POST http://localhost:8002/actuator/refresh

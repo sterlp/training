@@ -9,7 +9,7 @@ spring:
       username: configuser
       password: configpass
       request-read-timeout: 5000
-      fail-fast: true
+      fail-fast: true # only for prod
     refresh:
       enabled: true
 server:
