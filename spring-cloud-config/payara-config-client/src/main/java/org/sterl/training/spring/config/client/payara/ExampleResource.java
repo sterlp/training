@@ -23,8 +23,9 @@ public class ExampleResource {
     @Inject Config config;
     
     // https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#custom-configsources-via-configsourceprovider
-    // PAYARA Micro doesn't implement  dynamic configuration correctly, means it is bugged!
-    // it will reload but somehow random ...
+    // Payara has by default a 60s cache:
+    // https://docs.payara.fish/community/docs/5.2020.4/documentation/microprofile/config.html
+    // it doesn't matter how the config is accessed, Provider or through Config
     @Inject
     @ConfigProperty(name = "config.foo")
     Provider<String> foo;

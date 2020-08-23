@@ -1,5 +1,6 @@
 package org.sterl.training.spring.config.client.payara.configsource;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class SpringConfigServiceConfigSource implements ConfigSource {
     }
     
     public void reload() {
-        System.out.println("-> reload");
+        System.out.println(new Date() + "-> reload");
         try {
             final Map<String, String> newConfig = new LinkedHashMap<>();
             final Response exchange = springGateway.exchange("service1", "dev");
@@ -43,13 +44,13 @@ public class SpringConfigServiceConfigSource implements ConfigSource {
 
     @Override
     public Map<String, String> getProperties() {
-        System.out.println("-> getProperties");
+        System.out.println(new Date() + "-> getProperties");
         return config;
     }
 
     @Override
     public String getValue(String propertyName) {
-        System.out.println("-> getValue: " + propertyName);
+        System.out.println(new Date() + "-> getValue: " + propertyName);
         return config.get(propertyName);
     }
 

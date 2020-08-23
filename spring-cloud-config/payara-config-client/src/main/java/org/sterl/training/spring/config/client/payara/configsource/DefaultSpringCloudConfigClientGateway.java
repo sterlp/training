@@ -93,6 +93,7 @@ class DefaultSpringCloudConfigClientGateway implements AutoCloseable {
     
     private CloseableHttpClient getHttpClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         if (this.clientBuilder == null) {
+            // TODO add trust store here
             final SSLContext sslContext = new SSLContextBuilder()
                     .loadTrustMaterial(null, (x509CertChain, authType) -> true)
                     .build();
