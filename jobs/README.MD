@@ -29,6 +29,7 @@ Demonstrates the usage of Quartz and behavior in case we run in multiple nodes.
 3. If a worker should be registered or not -- *boolean* as it is in a cluster only one nodes has to do so
 
 # Links
+* https://sterl.org/2019/09/quartz-scheduler-integration-in-java-jee/
 * http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/ConfigJDBCJobStoreClustering.html
 * https://www.ebayinc.com/stories/blogs/tech/performance-tuning-on-quartz-scheduler/
 * http://airboxlab.github.io/performance/scalability/scheduler/quartz/2017/06/20/perf_tuning_quartz.html
