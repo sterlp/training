@@ -20,6 +20,11 @@ speed-measure-plugin.json
 *.launch
 .settings/
 *.sublime-workspace
+**/*/target/
+target/
+.mvn
+!.mvn/wrapper/maven-wrapper.jar
+
 
 # IDE - VSCode
 .vscode/*
@@ -47,3 +52,4 @@ browserslist
 .DS_Store
 Thumbs.db
 .bin
+jms-trainging/mqjms.log.0
