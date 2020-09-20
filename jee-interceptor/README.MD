@@ -1,3 +1,9 @@
+# Description
+
+This example demonstrates a custom interceptor which is regisered around the TRX
+platform interceptor (before and after) to provide a Timeout annotation for
+JEE.
+
 # Required
 
 PostgreSQL data source registered as jdbc/sample
