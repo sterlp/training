@@ -5,6 +5,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
 
@@ -13,5 +14,5 @@ import javax.interceptor.InterceptorBinding;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface TransactionTimeout {
-    
+    @Nonbinding int value() default 0;
 }
