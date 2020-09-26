@@ -21,7 +21,9 @@ public class DataAccessService {
         System.out.println("Hints: " + em.createQuery("SELECT COUNT(e) FROM FooEntity e").getHints());        
         int count = ((Number)em.createQuery("SELECT COUNT(e) FROM FooEntity e").getSingleResult()).intValue();
         em.persist(new FooEntity().setName(UUID.randomUUID().toString()));
-        em.createNativeQuery("SELECT 1  FROM pg_sleep(2)").getResultList();
+        em.createNativeQuery("SELECT 1  FROM pg_sleep(2)")
+                //.setHint("eclipselink.jdbc.timeout", 1)
+                .getResultList();
         
         return count;
     }

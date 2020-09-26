@@ -22,14 +22,23 @@ public class ConnectionTimeoutInterceptor implements Serializable {
     
     @AroundInvoke
     public Object execute(InvocationContext ctx) throws Exception {
-        TransactionTimeout timeout = getAnnoation(ctx);
-        Object currentValue = em.getProperties().get("javax.persistence.query.timeout");
-        try {
-            System.out.println(em.getClass().getSimpleName() + "--> setProperty " + timeout.value() * 1000 + " before: " + currentValue);
-            em.setProperty("javax.persistence.query.timeout", timeout.value() * 1000);
+        final TransactionTimeout timeoutAnnotation = getAnnoation(ctx);
+        
+        if (timeoutAnnotation != null && timeoutAnnotation.value() > 0) {
+            final long timeout = timeoutAnnotation.value() * 1000L;
+            final Object currentValue = em.getProperties().get("javax.persistence.query.timeout");
+            try {
+                System.out.println("setProperty: " + timeout + " before: " + currentValue);
+                em.setProperty("javax.persistence.query.timeout", timeout + "");
+                // eclipselink doesn't work https://github.com/eclipse-ee4j/eclipselink/issues/912
+                //em.setProperty("eclipselink.jdbc.timeout", timeoutAnnotation.value());
+                //em.setProperty("eclipselink.query.timeout.unit", "MILLISECONDS");
+                return ctx.proceed();
+            } finally {
+                em.setProperty("javax.persistence.query.timeout", currentValue);
+            }
+        } else {
             return ctx.proceed();
-        } finally {
-            em.setProperty("javax.persistence.query.timeout", currentValue);
         }
     }
     
