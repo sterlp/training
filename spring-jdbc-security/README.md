@@ -2,6 +2,10 @@
 
 Simple example to have a Spring JDBC realm which is compatible to a JEE container.
 
+- **Java EE example:** https://github.com/sterlp/training/tree/master/jee-jdbc-identity-store
+
+**Bot can use the same JDBC store for user and password.**
+
 # How to run
 
 - minimal requirement: Payara 4.1.2.181
