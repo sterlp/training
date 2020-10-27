@@ -28,6 +28,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        
+        <!-- Support for PBKDF2 -->
+        <dependency>
+            <groupId>org.sterl.hash</groupId>
+            <artifactId>spring-hash-lib</artifactId>
+            <version>0.1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>

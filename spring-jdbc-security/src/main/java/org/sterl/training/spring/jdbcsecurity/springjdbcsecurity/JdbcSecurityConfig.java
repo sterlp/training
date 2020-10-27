@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.sterl.training.jee.identitystores.hash.Pbkdf2PasswordHashImpl;
+import org.sterl.spring.hash.SpringBCryptPbkdf2PasswordHash;
 
 @Configuration
 @EnableGlobalMethodSecurity(
@@ -32,7 +32,7 @@ public class JdbcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new Pbkdf2PasswordHashImpl();
+        return new SpringBCryptPbkdf2PasswordHash();
     }
 
     
