@@ -21,6 +21,14 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
         </dependency>
+        
+        <!-- optional -->
+        <dependency>
+            <groupId>org.sterl.hash</groupId>
+            <artifactId>jee-hash-lib</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
