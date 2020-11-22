@@ -16,7 +16,7 @@
     <description>Spring Example JDBC Security</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -29,11 +29,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         
-        <!-- Support for PBKDF2 -->
         <dependency>
-            <groupId>org.sterl.hash</groupId>
-            <artifactId>spring-hash-lib</artifactId>
-            <version>0.1.0</version>
+            <groupId>org.sterl.identitystore.jdbc</groupId>
+            <artifactId>jdbc-identity-store</artifactId>
+            <version>0.1.1</version>
         </dependency>
 
         <dependency>
