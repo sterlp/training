@@ -12,12 +12,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import org.sterl.jee.hash.BCryptAndPbkdf2PasswordHash;
+import org.sterl.hash.PasswordHasher;
 
 @Path("")
 @ApplicationScoped
 public class SampleResource {
-    @Inject BCryptAndPbkdf2PasswordHash passwordHasher;
+    @Inject PasswordHasher passwordHasher;
     @PersistenceContext private EntityManager em;
     
     @RolesAllowed("user")
@@ -38,6 +38,6 @@ public class SampleResource {
     @Path("/hash")
     @POST
     public String hash(String password) {
-        return passwordHasher.generate(password.toCharArray());
+        return passwordHasher.encode(password);
     }
 }
