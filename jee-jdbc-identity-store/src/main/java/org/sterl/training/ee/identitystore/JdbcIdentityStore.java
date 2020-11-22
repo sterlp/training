@@ -1,4 +1,4 @@
-package org.sterl.training.ee.identitystore.memory;
+package org.sterl.training.ee.identitystore;
 
 import java.util.Arrays;
 import java.util.HashSet;
