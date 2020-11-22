@@ -1,6 +1,6 @@
 # URLs
 
-- Config Repo: https://github.com/sterlp/spring-cloud-config-repo´
+- Config Repo: https://github.com/sterlp/spring-cloud-config-repo
 
 ## Spring Config Server
 - Config Server: GET https://localhost:8000/service1/dev
