@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import lombok.Data;
 
+/**
+ * https://openjdk.java.net/jeps/359
+ */
 class RecordTest {
     
     @Data
@@ -27,6 +30,7 @@ class RecordTest {
     }
     
     // Java 15 record preview
+    @SuppressWarnings("preview")
     public record Car15(@NotNull String name, int hp) {
         public Car15 {
             if (hp < 100) {
@@ -39,7 +43,7 @@ class RecordTest {
     void test() {
         System.out.println(new Car14("Car 1", 150));
         System.out.println(new Car15("Car 2", 150));
-        
+
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             final Validator validator = factory.getValidator();
             
