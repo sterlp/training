@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.Data;
 
 /**
@@ -43,13 +46,23 @@ class RecordTest {
     void test() {
         System.out.println(new Car14("Car 1", 150));
         System.out.println(new Car15("Car 2", 150));
-
+    }
+    
+    @Test
+    void testValidation() {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             final Validator validator = factory.getValidator();
             
             System.out.println(validator.validate(new Car14(null, 200)));
             System.out.println(validator.validate(new Car15(null, 200)));
-        }
+        }  
     }
+    
+    @Test
+    void testJackson() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writeValueAsString(new Car15("F1", 100)));
+    }
+    
 
 }
