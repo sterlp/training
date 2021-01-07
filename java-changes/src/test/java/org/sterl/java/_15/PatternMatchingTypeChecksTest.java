@@ -12,11 +12,11 @@ class PatternMatchingTypeChecksTest {
     @SuppressWarnings("preview")
     @Test
     void test() {
-        final Object type = Long.valueOf(4L);
-        
-        if (type instanceof Long longValue && longValue.longValue() > 3) {
-            System.out.println(longValue);
-        } else {
+    final Object type = Long.valueOf(4L);
+    
+    if (type instanceof Long longValue && longValue.longValue() > 3) {
+        System.out.println(longValue);
+    } else {
             fail();
         }
     }
