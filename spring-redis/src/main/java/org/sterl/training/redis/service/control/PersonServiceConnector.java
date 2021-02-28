@@ -29,7 +29,7 @@ public class PersonServiceConnector {
 
     public Mono<String> load(String id) {
         return sleeperBA
-            .execute(2500)
+            .execute(500)
             .map(v -> {
                 log.info("Creating new person");
                 return new Person(id, UUID.randomUUID().toString());
@@ -47,12 +47,12 @@ public class PersonServiceConnector {
     public Mono<CachedEntity> loadAndCache(String id) {
         final Mono<CachedEntity> publisher = Mono.just(id)
             .flatMap(this::load)
-            .map(s -> new CachedEntity("entity:" + id, s, Instant.now()));
+            .map(s -> new CachedEntity(id, s, Instant.now()));
         
         final Mono<CachedEntity> shared = publisher.share();
         
         Mono.from(shared)
-            .flatMap(c -> reactiveRedisTemplate.opsForValue().set(c.getId(), c))
+            .flatMap(c -> reactiveRedisTemplate.opsForValue().set("entity:" + c.getId(), c))
             .subscribe(
                 b -> log.info("Saved: {} - {}", id, shared.block()),
                 e -> log.error("Failed to save {}.", id, e)
