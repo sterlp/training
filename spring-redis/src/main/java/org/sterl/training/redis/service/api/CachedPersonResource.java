@@ -22,6 +22,7 @@ public class CachedPersonResource {
     public Mono<CachedEntity> getByKey(@PathVariable String id) {
         return reactiveRedisTemplate.opsForValue()
             .get("entity:" + id)
+            // ensure that methods aren't called directly, using a wrapper
             .switchIfEmpty(Mono.defer(() -> personSerive.loadAndCache(id)));
         
     }

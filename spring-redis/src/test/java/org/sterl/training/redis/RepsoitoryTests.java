@@ -3,6 +3,7 @@ package org.sterl.training.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.sterl.training.redis.data.dao.CacheEntityDao;
 import org.sterl.training.redis.entity.CachedEntity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 
@@ -41,6 +45,8 @@ public class RepsoitoryTests {
     @Autowired 
     ReactiveStringRedisTemplate reactiveRedisStringTemplate;
     
+    @Autowired 
+    ObjectMapper objectMapper;
     @Autowired
     ObjectHashMapper mapper;
     
@@ -79,22 +85,37 @@ public class RepsoitoryTests {
     void testReactiveString() {
         
         final ReactiveHashOperations<String, Object, Object> opsForHash = reactiveRedisStringTemplate.opsForHash();
+        final CachedEntity entry = CachedEntity.builder()
+            .id("Muster_id")
+            .payload("Muster")
+            .cacheTime(Instant.now())
+            .build();
 
-        Flux.just("Max", "Muster")
-            .map(s -> CachedEntity.builder()
-                    .id(s + "_id")
-                    .payload(s)
-                    .cacheTime(Instant.now())
-                    .build())
+        Mono.just(entry)
             .flatMap(e -> opsForHash.putAll("entity:" + e.getId(), mapper.toHash(e)))
-            .blockLast();
-        
+            .block();
+
         final Optional<CachedEntity> springData = cacheEntityDao.findById("Muster_id");
         assertThat(springData.isPresent()).isTrue();
         assertThat(springData.get().getPayload()).isEqualTo("Muster");
 
+        opsForHash.entries("entity:Muster_id")
+            .subscribe(System.out::println);
+
+        StepVerifier.create(opsForHash.entries("entity:Muster_id"))
+            .expectNextCount(4)
+            .expectComplete()
+            .verify();
+
+        final Mono<CachedEntity> read = opsForHash.entries(("entity:Muster_id"))
+            .collectMap(Entry::getKey, Entry::getValue)
+            .map(m -> objectMapper.convertValue(m, CachedEntity.class));
+        
+        StepVerifier.create(read)
+            .expectNext(entry)
+            .verifyComplete();
     }
-    
+
     @Test
     void testReactive() {
         final ReactiveHashOperations<String, String, CachedEntity> opsForHash 
