@@ -1,7 +1,9 @@
 package org.sterl.training.redis;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Instant;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.core.RedisKeyValueTemplate;
+import org.springframework.data.redis.hash.ObjectHashMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.sterl.training.redis.data.dao.CacheEntityDao;
 import org.sterl.training.redis.entity.CachedEntity;
@@ -21,15 +24,10 @@ import org.sterl.training.redis.entity.CachedEntity;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNot.*;
-
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RepsoitoryTests {
-
 
     @Autowired
     CacheEntityDao cacheEntityDao;
@@ -39,6 +37,12 @@ public class RepsoitoryTests {
     RedisConnectionFactory connectionFactory;
     @Autowired 
     ReactiveRedisTemplate<String, CachedEntity> reactiveRedisTemplate;
+    
+    @Autowired 
+    ReactiveStringRedisTemplate reactiveRedisStringTemplate;
+    
+    @Autowired
+    ObjectHashMapper mapper;
     
     @BeforeEach
     void setUp() {
@@ -67,9 +71,28 @@ public class RepsoitoryTests {
         reactiveRedisTemplate.keys("*")
             .subscribe(System.out::println);
         
-       
+    }
+    
+    
+    // Use the reactive template in a compatible way to spring data
+    @Test
+    void testReactiveString() {
         
+        final ReactiveHashOperations<String, Object, Object> opsForHash = reactiveRedisStringTemplate.opsForHash();
+
+        Flux.just("Max", "Muster")
+            .map(s -> CachedEntity.builder()
+                    .id(s + "_id")
+                    .payload(s)
+                    .cacheTime(Instant.now())
+                    .build())
+            .flatMap(e -> opsForHash.putAll("entity:" + e.getId(), mapper.toHash(e)))
+            .blockLast();
         
+        final Optional<CachedEntity> springData = cacheEntityDao.findById("Muster_id");
+        assertThat(springData.isPresent()).isTrue();
+        assertThat(springData.get().getPayload()).isEqualTo("Muster");
+
     }
     
     @Test
@@ -82,26 +105,24 @@ public class RepsoitoryTests {
                     .id(s + "_id")
                     .payload(s).cacheTime(Instant.now())
                     .build())
-            .flatMap(e -> opsForHash.put(e.getId(), "entity", e));
+            .flatMap(e -> opsForHash. put("entity", e.getId(), e));
             
         StepVerifier.create(savePublisher)
             .expectNext(Boolean.TRUE)
             .expectNext(Boolean.TRUE)
             .verifyComplete();
         
-        opsForHash.keys("*")
-            .subscribe(System.out::println);
-        
-        StepVerifier.create(opsForHash.keys("*").count())
-            .expectNextCount(2)
-            .expectComplete()
-            .verify();
 
-        StepVerifier.create(opsForHash.get("Max_id", CachedEntity.class))
+        opsForHash.values("entity")
+            .subscribe(System.out::println);
+
+        StepVerifier.create(opsForHash.get("entity", "Max_id"))
             .expectNextMatches(ce -> ce.getPayload().equals("Max"))
-            .expectComplete()
-            .verify();
+            .verifyComplete();
         
         
+        StepVerifier.create(opsForHash.values("entity").collectList())
+            .expectNextMatches(el -> el.size() == 2)
+            .verifyComplete();
     }
 }

@@ -57,6 +57,7 @@ public class ReactiveRedisConfig {
 
         RedisSerializationContext<String, CachedEntity> context = builder
                 .value(valueSerializer)
+                .hashKey(keySerializer)
                 .hashValue(valueSerializer)
                 .build();
 
