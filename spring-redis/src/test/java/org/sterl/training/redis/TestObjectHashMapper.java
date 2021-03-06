@@ -40,6 +40,7 @@ class TestObjectHashMapper {
         System.out.println(hash);
     }
 
+    // noop Serializer, copied from spring
     enum ByteArrayRedisSerializer implements RedisSerializer<byte[]> {
         INSTANCE;
         @Nullable
@@ -58,16 +59,19 @@ class TestObjectHashMapper {
     void testReactiveObjectMapper() throws Exception {
         final StringRedisSerializer keySerializer = new StringRedisSerializer();
 
+        // the key itself can be a string
         RedisSerializationContext.RedisSerializationContextBuilder<String, byte[]> builder =
                 RedisSerializationContext.newSerializationContext(keySerializer);
 
-              RedisSerializationContext<String, byte[]> context = builder
-                      .value(ByteArrayRedisSerializer.INSTANCE)
-                      .hashKey(ByteArrayRedisSerializer.INSTANCE)
-                      .hashValue(ByteArrayRedisSerializer.INSTANCE)
-                      .build();
-        
+        // ensure we don't convert values and keys for the hash, as ObjectHashMapper
+        // uses byte arrays
+        RedisSerializationContext<String, byte[]> context = builder
+                .value(ByteArrayRedisSerializer.INSTANCE)
+                .hashKey(ByteArrayRedisSerializer.INSTANCE)
+                .hashValue(ByteArrayRedisSerializer.INSTANCE)
+                .build();
 
+        // build the redis reactive template and get the opsForHash
         final ReactiveRedisTemplate<String, byte[]> template = new ReactiveRedisTemplate<>(factory, context);
         final ReactiveHashOperations<String, byte[], byte[]> opsForHash = template.opsForHash();
         
@@ -79,15 +83,17 @@ class TestObjectHashMapper {
         
         // save
         Mono.just(entry)
+            // emulate spring data <hash-name>:<id> as key
             .flatMap(e -> opsForHash.putAll("entity:" + e.getId(), objectMapper.toHash(e)))
             .block();
         
         opsForHash.entries("entity:Muster_id")
             .collectMap(Entry::getKey, Entry::getValue)
             .subscribe(m -> {
+                // class not needed, as it written into the hash by the ObjectHashMapper
+                // but if set not cast is needed
                 final Object result = objectMapper.fromHash(m);
                 System.out.println(result);
             });
     }
-
 }

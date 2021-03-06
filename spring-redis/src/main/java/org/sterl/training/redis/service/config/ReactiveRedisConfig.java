@@ -32,6 +32,7 @@ public class ReactiveRedisConfig {
     ObjectMapper objectMapper(Jackson2ObjectMapperBuilder mapperBuilder) {
         return mapperBuilder.build();
     }
+    
     @Bean
     StringKeySerializer keySerializer() {
         return new StringKeySerializer();
@@ -45,7 +46,6 @@ public class ReactiveRedisConfig {
     @Bean
     public ReactiveRedisTemplate<String, CachedEntity> reactiveRedisTemplate(
       ReactiveRedisConnectionFactory factory, ObjectMapper objectMapper) {
-        
         
         final StringRedisSerializer keySerializer = new StringRedisSerializer();
         final Jackson2JsonRedisSerializer<CachedEntity> valueSerializer =

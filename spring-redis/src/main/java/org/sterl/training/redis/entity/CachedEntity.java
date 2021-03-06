@@ -1,5 +1,6 @@
 package org.sterl.training.redis.entity;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 
 @RedisHash("entity")
 @AllArgsConstructor @NoArgsConstructor @Data @Builder
-public class CachedEntity {
+public class CachedEntity implements Serializable {
 
     @Id
     private String id;

@@ -14,7 +14,13 @@
 
 ## REDIS CLI commands
 
+### start redis
+`docker-compose updocker-compose up
+
+### list keys
 `docker exec -it 41ab352c53a9 redis-cli KEYS "*"`
+
+### read a hash
 `docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"
 
 
