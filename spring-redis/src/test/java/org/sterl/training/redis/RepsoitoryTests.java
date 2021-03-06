@@ -41,8 +41,8 @@ public class RepsoitoryTests {
     RedisConnectionFactory connectionFactory;
     @Autowired 
     ReactiveRedisTemplate<String, CachedEntity> reactiveRedisTemplate;
-    
-    @Autowired 
+
+    @Autowired
     ReactiveStringRedisTemplate reactiveRedisStringTemplate;
     
     @Autowired 
@@ -78,6 +78,8 @@ public class RepsoitoryTests {
             .subscribe(System.out::println);
         
     }
+    
+    
     
     
     // Use the reactive template in a compatible way to spring data

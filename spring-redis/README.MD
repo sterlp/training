@@ -12,6 +12,11 @@
 
 - GET http://localhost:8080/api/data/1
 
+## REDIS CLI commands
+
+`docker exec -it 41ab352c53a9 redis-cli KEYS "*"`
+`docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"
+
 
 ## Sync
 java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/sync -m post -p "fooooo"
