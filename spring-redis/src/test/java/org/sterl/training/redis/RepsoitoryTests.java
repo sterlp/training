@@ -20,7 +20,7 @@ import org.springframework.data.redis.core.RedisKeyValueTemplate;
 import org.springframework.data.redis.hash.ObjectHashMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.sterl.training.redis.data.dao.CacheEntityDao;
-import org.sterl.training.redis.entity.CachedEntity;
+import org.sterl.training.redis.model.CachedEntity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -78,9 +78,6 @@ public class RepsoitoryTests {
             .subscribe(System.out::println);
         
     }
-    
-    
-    
     
     // Use the reactive template in a compatible way to spring data
     @Test

@@ -18,8 +18,8 @@ import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.lang.Nullable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.sterl.training.redis.entity.CachedEntity;
-import org.sterl.training.redis.service.entity.Person;
+import org.sterl.training.redis.model.CachedEntity;
+import org.sterl.training.redis.service.model.Person;
 
 import reactor.core.publisher.Mono;
 

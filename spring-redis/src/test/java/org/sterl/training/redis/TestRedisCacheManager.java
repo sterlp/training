@@ -18,7 +18,7 @@ import org.springframework.data.redis.hash.ObjectHashMapper;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.sterl.training.redis.entity.CachedEntity;
+import org.sterl.training.redis.model.CachedEntity;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -41,6 +41,7 @@ class TestRedisCacheManager {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
+                        // JSON requires extended settings for java time, see ReactiveRedisConfig
                         .fromSerializer(RedisSerializer.java()));
         redisCacheConfiguration.usePrefix();
 

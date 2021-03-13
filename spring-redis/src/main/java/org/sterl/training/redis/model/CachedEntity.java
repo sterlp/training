@@ -1,4 +1,4 @@
-package org.sterl.training.redis.entity;
+package org.sterl.training.redis.model;
 
 import java.io.Serializable;
 import java.time.Instant;

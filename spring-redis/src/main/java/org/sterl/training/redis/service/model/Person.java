@@ -1,4 +1,4 @@
-package org.sterl.training.redis.service.entity;
+package org.sterl.training.redis.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

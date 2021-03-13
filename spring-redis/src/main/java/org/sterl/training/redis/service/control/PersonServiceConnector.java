@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.sterl.training.redis.entity.CachedEntity;
-import org.sterl.training.redis.service.entity.Person;
+import org.sterl.training.redis.model.CachedEntity;
+import org.sterl.training.redis.service.model.Person;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
