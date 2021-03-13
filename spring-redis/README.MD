@@ -12,6 +12,14 @@
 
 - GET http://localhost:8080/api/data/1
 
+## Indexed spring data redis
+
+Is demonstrated in Complex 
+
+- open IndexedTest
+- play run test and see the runtime
+- removed @Indexed from PersonBE
+
 ## REDIS CLI commands
 
 ### start redis

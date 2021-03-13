@@ -53,6 +53,12 @@ class IndexedTest {
             total += time;
         }
         System.out.println("Total: " + total / 1000 + "s");
+        
+        long time = System.currentTimeMillis();
+        System.out.println(
+                roomDao.findByPersonsName("Person 50").size());
+        time = System.currentTimeMillis() - time;
+        System.out.println("Load Person 50 time: " + time + "ms");
     }
 
 }
