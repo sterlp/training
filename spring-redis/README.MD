@@ -16,24 +16,30 @@
 
 Is demonstrated in Complex 
 
-- open IndexedTest
+- open testIndexedInsert
 - play run test and see the runtime
 - removed @Indexed from PersonBE
+
+- compare to testManualIndex
 
 ## REDIS CLI commands
 
 ### start redis
-`docker-compose updocker-compose up
+
+`docker-compose updocker-compose up`
 
 ### list keys
+
 `docker exec -it 41ab352c53a9 redis-cli KEYS "*"`
 
 ### read a hash
-`docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"
+
+`docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"docker exec -it 41ab352c53a9 redis-cli HGETALL "entity:Muster_id"`
 
 
 ## Sync
-java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/sync -m post -p "fooooo"
+
+`java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/sync -m post -p "fooooo"`
 
 -- Counters --------------------------------------------------------------------
 201.POST.http://localhost:8080/redis/sync
@@ -60,7 +66,9 @@ POST.http://localhost:8080/redis/sync
             99.9% <= 849,35 milliseconds
 
 ## Async
-java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/async -m post -p "fooooo"
+
+`java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/async -m post -p "fooooo"`
+
 
 -- Counters --------------------------------------------------------------------
 201.POST.http://localhost:8080/redis/async
@@ -85,7 +93,7 @@ POST.http://localhost:8080/redis/async
               98% <= 396,92 milliseconds
               99% <= 726,36 milliseconds
             99.9% <= 962,44 milliseconds
-            
+       
             
 -- Counters --------------------------------------------------------------------
 201.POST.http://localhost:8080/redis/reactive
@@ -95,7 +103,9 @@ failed.POST.http://localhost:8080/redis/reactive
 
 
 ## Reactive
-java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/reactive -m post -p "fooooo"
+
+`java -jar target/load-runner.jar -c 250 -u http://localhost:8080/redis/reactive -m post -p "fooooo"`
+
 
 -- Timers ----------------------------------------------------------------------
 POST.http://localhost:8080/redis/reactive
@@ -114,4 +124,3 @@ POST.http://localhost:8080/redis/reactive
               98% <= 365,45 milliseconds
               99% <= 659,78 milliseconds
             99.9% <= 729,45 milliseconds
-            

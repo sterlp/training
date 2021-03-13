@@ -9,20 +9,20 @@ import org.springframework.data.redis.core.RedisHash;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@RedisHash("r")
+@RedisHash("roomi")
 @Data @NoArgsConstructor
-public class RoomBE {
+public class RoomManualIndexBE {
 
     @Id
     private String name;
-    private Set<PersonBE> persons = new LinkedHashSet<>();
+    private Set<String> persons = new LinkedHashSet<>();
     
-    public RoomBE addPerson(String name) {
-        this.persons.add(new PersonBE(name));
+    public RoomManualIndexBE addPerson(String name) {
+        this.persons.add(name);
         return this;
     }
 
-    public RoomBE(String name) {
+    public RoomManualIndexBE(String name) {
         super();
         this.name = name;
     }
