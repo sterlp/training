@@ -1,11 +1,12 @@
 # Description
 
-This examples show a simple JEE JDBC Realm in combination with payara.
+This examples show a simple JEE JDBC Realm in combination with payara (4 and 5).
 
 - **Spring Boot example:** https://github.com/sterlp/training/tree/master/spring-jdbc-security
 
-**Bot can use the same JDBC store for user and password.**
+**But you can use the same JDBC store for user and password.**
 
+**Note:** Using payara 4 will require additional logging, same issue applies to the build in identity stores.
 # How to run
 
 - minimal requirement: Payara 4.1.2.181
