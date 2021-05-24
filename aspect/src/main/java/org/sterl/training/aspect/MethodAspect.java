@@ -18,8 +18,14 @@ public class MethodAspect {
      * This ensures that the aspect is only woven into methods with the annotation.
      * Otherwise all methods are woven!
      */
-    @Pointcut("execution(@MethodAnnotation * * (..))")
+    @Pointcut("execution(@MethodAnnotation * *(..))")
     private void isAnnotated() {};
+    
+    /**
+     * Limit package scan to our project only
+     */
+    @Pointcut("execution(* org.sterl.training..*(..))")
+    private void isInPackage() {};
     
     // https://www.eclipse.org/aspectj/doc/released/progguide/semantics-pointcuts.html
     // https://docs.spring.io/spring-framework/docs/5.3.x/reference/html/core.html#aop-pointcuts-designators
@@ -27,7 +33,7 @@ public class MethodAspect {
     /**
      * Run aspect with it is annotated and select directly the annotation.
      */
-    @Around("isAnnotated() && @annotation(annotation)")
+    @Around("isAnnotated() && isInPackage() && @annotation(annotation)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint, MethodAnnotation annotation) throws Throwable {
         final Logger logger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
         long time = System.nanoTime();
