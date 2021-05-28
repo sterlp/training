@@ -64,7 +64,7 @@ public class HelloResource {
                 (c) -> {
                     if (c.intValue() % 2 == 0) {
                         try {
-                            Thread.sleep(510);
+                            Thread.sleep(110);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
