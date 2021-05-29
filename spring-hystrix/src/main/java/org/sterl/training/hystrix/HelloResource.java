@@ -13,33 +13,26 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 
+import rx.Observable;
+
 @RestController
 public class HelloResource {
 
     @GetMapping("/hello")
-    DeferredResult<String> hello() throws Exception {
-        DeferredResult<String> result = new DeferredResult<>();
-
-        new HystrixCommand<String>(configHystrixCommand(HelloResource.class.getSimpleName(), "hello", 500)) {
+    Observable<String> hello() throws Exception {
+        return new HystrixCommand<String>(configHystrixCommand(HelloResource.class.getSimpleName(), "hello", 500)) {
             @Override
             protected String run() throws Exception {
                 return Instant.now().toString();
             }
         }
-        .toObservable()
-        .doOnNext(r -> result.setResult(r))
-        .doOnError(e -> result.setErrorResult(e))
-        .subscribe();
-
-        return result;
+        .toObservable();
     }
     
     final AtomicInteger errorCounter = new AtomicInteger(0);
     @GetMapping("/withError")
-    DeferredResult<String> withError() throws Exception {
-        DeferredResult<String> result = new DeferredResult<>();
-
-        new SimpleHystrixCommand<>("withError", errorCounter.incrementAndGet(), 
+    Observable<String> withError() throws Exception {
+        return new SimpleHystrixCommand<>("withError", errorCounter.incrementAndGet(), 
                 (c) -> {
                     if (c.intValue() % 2 == 0) {
                         throw new RuntimeException("rejected " + c);
@@ -47,12 +40,7 @@ public class HelloResource {
                         return c + " " + Instant.now().toString() ;
                     }
                 })
-        .toObservable()
-        .doOnNext(r -> result.setResult(r))
-        .doOnError(e -> result.setErrorResult(e.getCause()))
-        .subscribe();
-
-        return result;
+        .toObservable();
     }
     
     final AtomicInteger timeoutCounter = new AtomicInteger(0);
@@ -66,15 +54,14 @@ public class HelloResource {
                         try {
                             Thread.sleep(110);
                         } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            // ignored
                         }
                     }
                     return c + " " + Instant.now().toString() ;
                 })
         .toObservable()
-        .doOnNext(r -> result.setResult(r))
-        .doOnError(e -> result.setErrorResult(e.getCause()))
-        .subscribe();
+        .doOnError(result::setErrorResult)
+        .subscribe(result::setResult);
 
         return result;
     }
