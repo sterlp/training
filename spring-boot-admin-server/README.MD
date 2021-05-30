@@ -1,0 +1,3 @@
+- https://codecentric.github.io/spring-boot-admin/current/
+- https://github.com/codecentric/spring-boot-admin/tree/master/spring-boot-admin-samples
+- https://www.baeldung.com/spring-boot-admin

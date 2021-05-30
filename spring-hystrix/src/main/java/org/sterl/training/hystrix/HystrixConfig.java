@@ -1,9 +1,16 @@
 package org.sterl.training.hystrix;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +22,7 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.stereotype.Component;
 
 import com.netflix.config.ConfigurationManager;
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
@@ -46,6 +54,18 @@ public class HystrixConfig {
     
     @Bean
     public ServletRegistrationBean<HystrixMetricsStreamServlet> hystrixStreamServlet(){
-        return new ServletRegistrationBean<>(new HystrixMetricsStreamServlet(), "/hystrix.stream");
+        return new ServletRegistrationBean<>(new HystrixMetricsStreamServlet(), "/actuator/hystrix.stream");
+    }
+    @Bean
+    public HystrixEndpoint hystrixEndpoint() {
+        return new HystrixEndpoint(); 
+    }
+    
+    @Endpoint(id = "hystrix.stream")
+    public static class HystrixEndpoint {
+        @ReadOperation
+        public String dummy() {
+          return "dummy";
+        }
     }
 }

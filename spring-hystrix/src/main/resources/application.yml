@@ -1,0 +1,27 @@
+server:
+  port: 8083
+spring:
+  boot:
+    admin:
+      client:
+        url:
+        - http://localhost:8080
+  application:
+    name: hystrix
+    
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+hystrix:
+  threadpool:
+    default:
+      coreSize=5
+    HelloResource:
+      coreSize=10

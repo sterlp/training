@@ -17,6 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <hystrix.version>1.5.18</hystrix.version>
+        <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -26,6 +27,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${spring-boot-admin.version}</version>
         </dependency>
 
         <dependency>

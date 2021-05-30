@@ -9,19 +9,19 @@
   * e.g. `docker run --rm -p 9090:9090 --name hystrx-dashboard  synoa/docker-hystrix-dashboard`
 3. Open the hystrix app
   * e.g. http://localhost:9090/
-  * add the hystrix stream: http://host.docker.internal:8080/hystrix.stream
+  * add the hystrix stream: http://host.docker.internal:8083/actuator/hystrix.stream
 4. Call any URL of the sample app
 
 # App URLs
 
 ## Return current time
-- http://localhost:8080/hello
+- http://localhost:8083/hello
 
 ## Return an error every second request
-- http://localhost:8080/withError
+- http://localhost:8083/withError
 
 ## Return a timeout every second request
-- http://localhost:8080/withTimeout
+- http://localhost:8083/withTimeout
 
 # Links
 - https://github.com/Netflix/Hystrix/wiki/Configuration
