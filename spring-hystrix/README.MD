@@ -1,3 +1,7 @@
+# How does it look like
+
+![Hystrix Dashboard](hystrix_dashboard.png?raw=true "Hystrix Dashboard")
+
 # How to run
 
 1. start spring boot app
@@ -21,3 +25,4 @@
 
 # Links
 - https://github.com/Netflix/Hystrix/wiki/Configuration
+- https://github.com/spring-cloud-samples/hystrix-dashboard

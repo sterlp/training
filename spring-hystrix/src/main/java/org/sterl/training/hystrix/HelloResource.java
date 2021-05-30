@@ -87,7 +87,7 @@ public class HelloResource {
     }
     
     private static HystrixCommand.Setter configHystrixCommand(String className, String methodName, int timeoutMs) {
-        return HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(className + "Group"))
+        return HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(className))
                 .andCommandKey(HystrixCommandKey.Factory.asKey(className + "." + methodName))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                         .withExecutionTimeoutInMilliseconds(timeoutMs));
