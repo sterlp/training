@@ -53,3 +53,5 @@ browserslist
 Thumbs.db
 .bin
 jms-trainging/mqjms.log.0
+hibernate/.factorypath
+messaging/.factorypath

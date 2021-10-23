@@ -26,6 +26,7 @@ public class ExampleResource {
     // Payara has by default a 60s cache:
     // https://docs.payara.fish/community/docs/5.2020.4/documentation/microprofile/config.html
     // it doesn't matter how the config is accessed, Provider or through Config
+    // https://github.com/payara/Payara/issues/4839
     @Inject
     @ConfigProperty(name = "config.foo")
     Provider<String> foo;
