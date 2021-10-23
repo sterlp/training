@@ -37,9 +37,9 @@ public class JobConfig {
             .<String, String>chunk(1)
             .reader(new ListItemReader<>(Collections.synchronizedList(Arrays.asList("1", "2", "3", "4"))))
             .writer(writer())
-            .faultTolerant()
-            .retryLimit(3)
-            .retry(RuntimeException.class)
+            //.faultTolerant()
+            //.retryLimit(3)
+            //.retry(RuntimeException.class)
             .build();
     }
     @Bean
