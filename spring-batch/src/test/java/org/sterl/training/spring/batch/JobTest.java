@@ -15,7 +15,7 @@ import org.sterl.training.spring.batch.JobConfig.ErrorListWriter;
 // https://docs.spring.io/spring-batch/docs/current/reference/html/common-patterns.html#commonPatterns
 @SpringBootTest
 @SpringBatchTest
-class SpringBatchApplicationTests {
+class JobTest {
 
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
@@ -23,6 +23,7 @@ class SpringBatchApplicationTests {
     private JobRepositoryTestUtils jobRepositoryTestUtils;
     @Autowired
     ErrorListWriter writer;
+
     @Test
     void contextLoads() throws Exception {
         // GIVEN

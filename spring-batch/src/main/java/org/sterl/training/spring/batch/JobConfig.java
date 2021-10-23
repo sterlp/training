@@ -50,6 +50,7 @@ public class JobConfig {
     public Job testJob() {
         return jobFactory.get("testJob")
             .incrementer(new RunIdIncrementer())
+            .preventRestart() // optional make sure each job is executed just once
             .flow(testStep())
             .end()
             .build();
