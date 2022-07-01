@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  quartz:
+    wait-for-jobs-to-complete-on-shutdown: false
+    job-store-type: jdbc
+    overwrite-existing-jobs: true
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.jobStore.isClustered: true
+      org.quartz.scheduler.instanceId: AUTO
+      org.quartz.scheduler.skipUpdateCheck: true
+      org.quartz.threadPool.threadCount: 2
+
+  datasource:
+    url: jdbc:h2:file:./quartz-db
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+      path: /h2
