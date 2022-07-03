@@ -19,7 +19,7 @@ public class RetryJob extends QuartzJobBean {
     @Autowired private Scheduler scheduler;
     @Setter
     private int count;
-    
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Integer retryCount = getRetryCount(context);
@@ -45,8 +45,8 @@ public class RetryJob extends QuartzJobBean {
     }
     // this wil re-schedule the job immediately
     private void retryNow(Integer retryCount, Exception e) throws JobExecutionException {
-        throw new JobExecutionException("Create Items failed  " 
-                + retryCount + " times. Will retry. " + e.getMessage(), 
+        throw new JobExecutionException("Create Items failed  "
+                + retryCount + " times. Will retry. " + e.getMessage(),
                 true);
     }
     private void retryLater(JobExecutionContext context) throws SchedulerException {
@@ -58,5 +58,5 @@ public class RetryJob extends QuartzJobBean {
     private Integer getRetryCount(JobExecutionContext context) {
         return (Integer)context.getMergedJobDataMap().getOrDefault("retryCount", 1);
     }
-    
+
 }

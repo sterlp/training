@@ -6,8 +6,6 @@ import java.util.Set;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.utils.Key;
@@ -39,7 +37,7 @@ public class QuartzController {
         return this.getTrigger(name, Key.DEFAULT_GROUP);
     }
     @GetMapping("/triggers/{name}/{group}")
-    public TriggerV1 getTrigger(@PathVariable String name, 
+    public TriggerV1 getTrigger(@PathVariable String name,
             @PathVariable String group) throws SchedulerException {
         return TriggerV1.of(scheduler.getTrigger(new TriggerKey(name, group)));
     }

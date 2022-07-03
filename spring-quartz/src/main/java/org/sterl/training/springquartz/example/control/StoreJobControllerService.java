@@ -2,11 +2,13 @@ package org.sterl.training.springquartz.example.control;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class StoreJobControllerService {
-    
+
     private final Scheduler scheduler;
     private final JobDetail retryJob;
     private final JobDetail sleepJob;
-    
+
     public TriggerKey notifyUser(String user) throws SchedulerException {
         TriggerKey key = new TriggerKey(user, NotifyUserJob.ID);
         var t = TriggerBuilder.newTrigger()
@@ -38,7 +40,7 @@ public class StoreJobControllerService {
         scheduler.scheduleJob(t);
         return t.getKey();
     }
-    
+
     public TriggerKey createItems(int count) throws SchedulerException {
         var t = TriggerBuilder.newTrigger()
                 .forJob(retryJob)
@@ -49,17 +51,24 @@ public class StoreJobControllerService {
         return t.getKey();
     }
 
+    @Transactional
+    public int cancelCreateItems() throws SchedulerException {
+        List<? extends Trigger> triggers = scheduler.getTriggersOfJob(retryJob.getKey());
+        scheduler.unscheduleJobs(triggers.stream().map(t -> t.getKey()).toList());
+        return triggers.size();
+    }
+
     public TriggerKey createStoreSleepJob(int sleepInS, String id, String group) throws SchedulerException {
         var builder = TriggerBuilder.newTrigger()
                 .forJob(sleepJob)
                 .startNow()
                 .usingJobData("sleepInS", sleepInS);
-        
+
         if (id != null || group != null) {
             builder.withIdentity(id, group);
         }
         var t = builder.build();
-            
+
         scheduler.scheduleJob(t);
         log.info("Triggered sleep job {} with time {}", t.getKey(), sleepInS);
         return t.getKey();

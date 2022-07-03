@@ -3,6 +3,7 @@ package org.sterl.training.springquartz.example.api;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,21 +20,25 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/store-jobs")
 public class ExampleController {
-    
+
     private final StoreJobControllerService jobControllerService;
-    
+
     @PostMapping("/notify")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public TriggerKey notifyUser(@RequestBody(required = true) String user) throws SchedulerException {
         return jobControllerService.notifyUser(user);
     }
-    
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public TriggerKey createItems(@RequestBody(required = true) int count) throws SchedulerException {
         return jobControllerService.createItems(count);
     }
-    
+    @DeleteMapping
+    public int createItems() throws SchedulerException {
+        return jobControllerService.cancelCreateItems();
+    }
+
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     @PostMapping("/sleep/{id}/{group}")
     public TriggerKey triggerStoreSleepWithId(

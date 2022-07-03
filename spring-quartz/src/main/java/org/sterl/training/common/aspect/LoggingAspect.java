@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class LoggingAspect {
-    
+
     @Pointcut("execution(@LogMethod * * (..))")
-    private void isAnnotated() {};
+    private void isAnnotated() {}
     @Pointcut("execution(* org.sterl.training..*(..))")
-    private void isInPackage() {};
+    private void isInPackage() {}
 
     @Around("isAnnotated() && isInPackage() && @annotation(annotation)")
-    public Object logExecutionTime(ProceedingJoinPoint joinPoint, 
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint,
                                    LogMethod annotation) throws Throwable {
-        
+
         final Logger log = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
         String args = "";
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {

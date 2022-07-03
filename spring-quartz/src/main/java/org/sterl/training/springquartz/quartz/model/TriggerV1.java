@@ -16,11 +16,11 @@ public class TriggerV1 {
     private JobKey jobKey;
     private String calendarName;
     private String description;
-    
+
     private Date startTime;
     private Date endTime;
     private Date nextFireTime;
-    
+
     private int priority;
     private Map<String, Object> jobDataMap;
 

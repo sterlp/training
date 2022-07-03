@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StoreItemService {
 
     @Autowired StoreItemRepository repository;
-    
+
     @LogMethod
     public void createItems(int count) {
         final Instant now = Instant.now();
@@ -31,7 +31,7 @@ public class StoreItemService {
             // just to demonstrate the TRX rollback
             if (i > 10) throw new IllegalArgumentException("Count should not be greater than 10");
         }
-        
+
     }
 
 }

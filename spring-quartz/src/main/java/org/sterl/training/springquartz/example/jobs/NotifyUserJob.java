@@ -10,8 +10,8 @@ public class NotifyUserJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        System.err.println("Notify E-Mail to " + 
+        System.err.println("Notify E-Mail to " +
                 context.getMergedJobDataMap().getString("user"));
-        
+
     }
 }

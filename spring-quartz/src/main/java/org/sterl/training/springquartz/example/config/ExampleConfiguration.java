@@ -44,7 +44,7 @@ public class ExampleConfiguration {
         jobDetailFactory.setRequestsRecovery(true);
         return jobDetailFactory;
     }
-    
+
     @Bean
     public JobDetailFactoryBean sleepJob() {
         final var jobDetailFactory = new JobDetailFactoryBean();
@@ -55,7 +55,7 @@ public class ExampleConfiguration {
         jobDetailFactory.setRequestsRecovery(true);
         return jobDetailFactory;
     }
-    
+
     @Bean
     public JobDetailFactoryBean notifyUserJob() {
         final var jobDetailFactory = new JobDetailFactoryBean();

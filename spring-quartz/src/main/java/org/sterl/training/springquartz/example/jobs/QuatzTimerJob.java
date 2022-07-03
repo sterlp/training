@@ -23,7 +23,7 @@ public class QuatzTimerJob implements Job {
         log.info("Timer fired (has spring bean: {}) - {}",
                 storeItemService != null,
                 Instant.now());
-        
+
     }
 
 }

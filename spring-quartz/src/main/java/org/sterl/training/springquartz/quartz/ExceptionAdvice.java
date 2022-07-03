@@ -21,7 +21,7 @@ public class ExceptionAdvice {
             ServletWebRequest r, ObjectAlreadyExistsException e) {
         return of(HttpStatus.CONFLICT, r, e);
     }
-    
+
     private ResponseEntity<Map<String, Object>> of (HttpStatus status, ServletWebRequest r, Exception e) {
         Map<String, Object> result = new DefaultErrorAttributes().getErrorAttributes(r, OPTIONS);
         result.put("error", status.getReasonPhrase());

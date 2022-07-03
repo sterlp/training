@@ -24,7 +24,7 @@ public class SleepJob extends QuartzJobBean {
             Thread.sleep(sleepInS * 1000);
         } catch (InterruptedException e) {}
         log.info("finished {} ", storeItemService);
-        
+
     }
 
 }
