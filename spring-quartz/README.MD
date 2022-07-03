@@ -11,5 +11,5 @@
 # Commands
 
 ```
-docker run --detach --name mariadb-quartz --env MARIADB_USER=quartz-user --env MARIADB_PASSWORD=quartz_pass --env MARIADB_ROOT_PASSWORD=my-quartz_pass  mariadb:latest
+docker run -p 3306:3306 -d --name mariadb-quartz --env MARIADB_USER=quartz-user --env MARIADB_PASSWORD=quartz_pass --env MARIADB_ROOT_PASSWORD=my-quartz_pass  mariadb:latest
 ```
