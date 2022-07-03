@@ -1,4 +1,4 @@
-package org.sterl.training.springquartz.store.jobs;
+package org.sterl.training.springquartz.example.jobs;
 
 import java.time.Instant;
 
@@ -7,7 +7,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.sterl.training.springquartz.store.control.StoreService;
+import org.sterl.training.springquartz.example.control.StoreItemService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,11 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @DisallowConcurrentExecution
 public class QuatzTimerJob implements Job {
 
-    @Autowired StoreService storeService;
+    @Autowired StoreItemService storeItemService;
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        log.info("Timer fired (has spring bean{}) - {}",
-                storeService != null,
+        log.info("Timer fired (has spring bean: {}) - {}",
+                storeItemService != null,
                 Instant.now());
         
     }
