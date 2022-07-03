@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.sterl.training.springquartz.example.control.StoreJobControllerService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/store-jobs")

@@ -10,9 +10,6 @@ import org.sterl.training.common.aspect.LogMethod;
 import org.sterl.training.springquartz.example.model.StoreItemBE;
 import org.sterl.training.springquartz.example.repository.StoreItemRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 @Transactional(timeout = 10)
 public class StoreItemService {
