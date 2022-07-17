@@ -18,6 +18,7 @@ public class StoreItemService {
 
     @LogMethod
     public void createItems(int count) {
+        System.err.println(Thread.currentThread().getId() + " active ...");
         final Instant now = Instant.now();
         for (int i = 0; i < count; i++) {
             repository.save(StoreItemBE.builder()
@@ -26,9 +27,18 @@ public class StoreItemService {
                     .build()
                 );
             // just to demonstrate the TRX rollback
-            if (i > 10) throw new IllegalArgumentException("Count should not be greater than 10");
         }
+        // just to slow it down a bit
+        try {
+            Thread.sleep(5250);
+        } catch (InterruptedException e) {}
 
+        if (count > 10) {
+            System.err.println(Thread.currentThread().getId() + "... done.");
+            throw new IllegalArgumentException("Count should not be greater than 10");
+        }
+        
+        System.err.println(Thread.currentThread().getId() + "... done.");
     }
 
 }

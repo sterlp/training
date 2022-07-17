@@ -41,7 +41,7 @@ public class StoreJobControllerService {
         return t.getKey();
     }
 
-    public TriggerKey createItems(int count) throws SchedulerException {
+    public TriggerKey triggerRetryJob(int count) throws SchedulerException {
         var t = TriggerBuilder.newTrigger()
                 .forJob(retryJob)
                 .startNow()

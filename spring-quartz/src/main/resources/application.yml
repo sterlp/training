@@ -13,9 +13,10 @@ spring:
       org.quartz.jobStore.isClustered: true
       org.quartz.scheduler.instanceId: AUTO
       org.quartz.scheduler.skipUpdateCheck: true
-      org.quartz.threadPool.threadCount: 2
-      # org.quartz.plugin.triggHistory.class: org.quartz.plugins.history.LoggingTriggerHistoryPlugin
-      # org.quartz.plugin.jobHistory.class: org.quartz.plugins.history.LoggingJobHistoryPlugin
+      org.quartz.threadPool.threadCount: 10
+      org.quartz.plugin.triggHistory.class: org.quartz.plugins.history.LoggingTriggerHistoryPlugin
+      org.quartz.plugin.jobHistory.class: org.quartz.plugins.history.LoggingJobHistoryPlugin
+      org.quartz.executionLimit.group_limit_1: 1
 
 
   datasource:

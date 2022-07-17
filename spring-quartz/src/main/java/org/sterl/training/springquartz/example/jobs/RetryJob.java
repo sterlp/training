@@ -30,26 +30,29 @@ public class RetryJob extends QuartzJobBean {
                 throw e;
             } else {
                 retryCount = retryCount + 1;
-                // don't use the getMergedJobDataMap of spring, it will not be updated
-                context.getTrigger().getJobDataMap().put("retryCount", retryCount);
+                
 
-                // retryNow(retryCount, e);
+                //retryNow(retryCount, context, e);
+
                 try {
-                    retryLater(context);
+                    retryLater(retryCount, context);
                 } catch (SchedulerException e1) {
                     e1.printStackTrace();
-                    retryNow(retryCount, e);
+                    retryNow(retryCount, context,  e);
                 }
             }
         }
     }
     // this wil re-schedule the job immediately
-    private void retryNow(Integer retryCount, Exception e) throws JobExecutionException {
+    private void retryNow(Integer retryCount, JobExecutionContext context, Exception e) throws JobExecutionException {
+        context.getMergedJobDataMap().put("retryCount", retryCount);
         throw new JobExecutionException("Create Items failed  "
                 + retryCount + " times. Will retry. " + e.getMessage(),
                 true);
     }
-    private void retryLater(JobExecutionContext context) throws SchedulerException {
+    private void retryLater(Integer retryCount, JobExecutionContext context) throws SchedulerException {
+        // don't use the getMergedJobDataMap of spring, it will not be updated as we replace it here
+        context.getTrigger().getJobDataMap().put("retryCount", retryCount);
         final var b = context.getTrigger().getTriggerBuilder();
         b.startAt(Date.from(Instant.now().plusSeconds(getRetryCount(context) * 5)));
         scheduler.rescheduleJob(context.getTrigger().getKey(), b.build());

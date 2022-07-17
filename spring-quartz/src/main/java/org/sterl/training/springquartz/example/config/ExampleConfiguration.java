@@ -39,6 +39,8 @@ public class ExampleConfiguration {
         final var jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(RetryJob.class);
         jobDetailFactory.setName("RETRY-JOB");
+        // configured to 1 thread
+        jobDetailFactory.setGroup("group_limit_1");
         jobDetailFactory.setDescription("Job we directly trigger if we want to run it");
         jobDetailFactory.setDurability(true);
         jobDetailFactory.setRequestsRecovery(true);

@@ -30,7 +30,7 @@ public class ExampleController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public TriggerKey createItems(@RequestBody(required = true) int count) throws SchedulerException {
-        return jobControllerService.createItems(count);
+        return jobControllerService.triggerRetryJob(count);
     }
     @DeleteMapping
     public int createItems() throws SchedulerException {
