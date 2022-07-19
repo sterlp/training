@@ -1,31 +1,51 @@
 package org.sterl.training.springquartz.pmw;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.concurrent.CountDownLatch;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sterl.training.springquartz.pmw.boundary.InMemoryWorkflowService;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.DirectSchedulerFactory;
+import org.quartz.simpl.RAMJobStore;
+import org.quartz.simpl.SimpleThreadPool;
+import org.sterl.training.springquartz.pmw.boundary.QuartzWorkflowService;
+import org.sterl.training.springquartz.pmw.component.SimpleWorkflowStepStrategy;
 import org.sterl.training.springquartz.pmw.model.SimpleWorkflowContext;
 import org.sterl.training.springquartz.pmw.model.Workflow;
+import org.sterl.training.springquartz.pmw.quartz.PmwQuartzJob;
+import org.sterl.training.springquartz.pmw.quartz.PwmQuartzJobFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-class ExampleWorkflowTest {
+class QuartzWorkflowTest {
     
-    InMemoryWorkflowService inMemoryWorkflowService = new InMemoryWorkflowService();
+    QuartzWorkflowService subject;
 
+    Scheduler scheduler;
+    
     @BeforeEach
     void setUp() throws Exception {
+        DirectSchedulerFactory.getInstance().createVolatileScheduler(10);
+        scheduler = DirectSchedulerFactory.getInstance().getScheduler();
+        subject = new QuartzWorkflowService(scheduler);
+        scheduler.setJobFactory(new PwmQuartzJobFactory(
+                new SimpleWorkflowStepStrategy(), subject));
+        
+        scheduler.start();
+
     }
 
-    @Test
-    void test() {
-        assertThat(inMemoryWorkflowService).isNotNull();
+    @AfterEach
+    void tearDown() throws SchedulerException {
+        scheduler.shutdown();
     }
     
     @Test
-    void testWorkflow() {
+    void testWorkflow() throws Exception {
+        final CountDownLatch latch = new CountDownLatch(1);
         Workflow<SimpleWorkflowContext> w = new Workflow<SimpleWorkflowContext>("test-workflow")
             .next(c -> {
                 log.info("do-first");
@@ -44,10 +64,13 @@ class ExampleWorkflowTest {
             .end()
             .next(c -> {
                 log.info("finally");
+                latch.countDown();
             });
         
+        subject.register(w);
+        subject.execute(w, SimpleWorkflowContext.newContextFor(w));
         
-        inMemoryWorkflowService.execute(w, SimpleWorkflowContext.newContextFor(w));
+        latch.await();
     }
     
     @Test
@@ -67,7 +90,7 @@ class ExampleWorkflowTest {
             });
         
         
-        inMemoryWorkflowService.execute(w, SimpleWorkflowContext.newContextFor(w));
+        subject.execute(w, SimpleWorkflowContext.newContextFor(w));
     }
 
 }

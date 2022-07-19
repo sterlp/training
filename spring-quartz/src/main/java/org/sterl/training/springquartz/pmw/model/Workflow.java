@@ -11,6 +11,8 @@ public class Workflow<T extends AbstractWorkflowContext> {
 
     @Getter
     private final String name;
+    @Getter
+    private int retryCount = 3;
     private final List<Step<T>> steps = new ArrayList<>();
     
     public Workflow(String name) {
@@ -45,8 +47,21 @@ public class Workflow<T extends AbstractWorkflowContext> {
         return getNextStep(c) != null;
     }
 
-    public void fail(Step<T> nextStep, T c, Exception e) {
-        // TODO Auto-generated method stub
-        
+    public boolean fail(Step<T> nextStep, T c, Exception e) {
+        c.retry(e);
+        c.setLastFailedStep(c.getNextStep());
+        return retryCount > c.getRetryCount();
     }
+    
+    public Workflow<T> retryCount(int count) {
+        this.retryCount = count;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Workflow [name=" + name + ", retryCount=" + retryCount + ", steps=" + steps.size() + "]";
+    }
+    
+    
 }
