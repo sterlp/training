@@ -8,13 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.DirectSchedulerFactory;
-import org.quartz.simpl.RAMJobStore;
-import org.quartz.simpl.SimpleThreadPool;
 import org.sterl.training.springquartz.pmw.boundary.QuartzWorkflowService;
 import org.sterl.training.springquartz.pmw.component.SimpleWorkflowStepStrategy;
+import org.sterl.training.springquartz.pmw.component.WorkflowRepository;
 import org.sterl.training.springquartz.pmw.model.SimpleWorkflowContext;
 import org.sterl.training.springquartz.pmw.model.Workflow;
-import org.sterl.training.springquartz.pmw.quartz.PmwQuartzJob;
 import org.sterl.training.springquartz.pmw.quartz.PwmQuartzJobFactory;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +20,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class QuartzWorkflowTest {
     
+    WorkflowRepository workflowRepository;
     QuartzWorkflowService subject;
-
     Scheduler scheduler;
     
     @BeforeEach
     void setUp() throws Exception {
         DirectSchedulerFactory.getInstance().createVolatileScheduler(10);
         scheduler = DirectSchedulerFactory.getInstance().getScheduler();
-        subject = new QuartzWorkflowService(scheduler);
+        workflowRepository = new WorkflowRepository();
+        subject = new QuartzWorkflowService(scheduler, workflowRepository);
         scheduler.setJobFactory(new PwmQuartzJobFactory(
-                new SimpleWorkflowStepStrategy(), subject));
+                new SimpleWorkflowStepStrategy(), workflowRepository, null));
         
         scheduler.start();
 
@@ -46,6 +45,8 @@ class QuartzWorkflowTest {
     @Test
     void testWorkflow() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch left = new CountDownLatch(1);
+        
         Workflow<SimpleWorkflowContext> w = new Workflow<SimpleWorkflowContext>("test-workflow")
             .next(c -> {
                 log.info("do-first");
@@ -70,11 +71,13 @@ class QuartzWorkflowTest {
         subject.register(w);
         subject.execute(w, SimpleWorkflowContext.newContextFor(w));
         
+        left.await();
         latch.await();
     }
     
     @Test
     void testRightFirst() {
+        final CountDownLatch latch = new CountDownLatch(1);
         Workflow<SimpleWorkflowContext> w = new Workflow<SimpleWorkflowContext>("test-workflow")
             .choose(c -> {
                 log.info("choose");
@@ -89,6 +92,7 @@ class QuartzWorkflowTest {
                 log.info("finally");
             });
         
+        subject.register(w);
         
         subject.execute(w, SimpleWorkflowContext.newContextFor(w));
     }

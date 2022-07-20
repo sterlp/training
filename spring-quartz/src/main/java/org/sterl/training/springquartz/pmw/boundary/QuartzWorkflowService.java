@@ -9,6 +9,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.sterl.training.springquartz.pmw.component.WorkflowRepository;
 import org.sterl.training.springquartz.pmw.model.AbstractWorkflowContext;
 import org.sterl.training.springquartz.pmw.model.Workflow;
 import org.sterl.training.springquartz.pmw.quartz.PmwQuartzJob;
@@ -21,8 +22,9 @@ public class QuartzWorkflowService extends AbstractWorkflowService {
 
     @NonNull
     private final Scheduler scheduler;
+    @NonNull
+    private final WorkflowRepository workflowRepository;
     private final Map<String, JobDetail> workflowJobs = new HashMap<>();
-    private final Map<String, Workflow<?>> workflows = new HashMap<>();
 
     public <T extends AbstractWorkflowContext> void execute(Workflow<T> w, T c) {
         JobDetail job = workflowJobs.get(w.getName());
@@ -48,23 +50,13 @@ public class QuartzWorkflowService extends AbstractWorkflowService {
                 .build();
 
         try {
+            workflowRepository.registerUnique(w);
             scheduler.addJob(job, true);
             workflowJobs.put(w.getName(), job);
-            workflows.put(w.getName(), w);
             return job;
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    public Workflow<?> getWorkflow(String name) {
-        Workflow<?> w = workflows.get(name);
-        if (w == null) {
-            throw new IllegalStateException("No workflow with the name " 
-                    + name + " found. Registered " + workflows.keySet());
-        }
-        return w;
-    }
-
     
 }
