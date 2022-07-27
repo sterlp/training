@@ -3,6 +3,7 @@ package org.sterl.training.springquartz.example.api;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,15 @@ import lombok.RequiredArgsConstructor;
 public class ExampleController {
 
     private final StoreJobControllerService jobControllerService;
+    
+    @Transactional
+    @PostMapping("/notify-error")
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public TriggerKey notifyUserWithError(@RequestBody(required = true) String user) throws SchedulerException {
+        TriggerKey foo = jobControllerService.notifyUser(user);
+        if (true == true) throw new RuntimeException("nope " + user);
+        return foo;
+    }
 
     @PostMapping("/notify")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
