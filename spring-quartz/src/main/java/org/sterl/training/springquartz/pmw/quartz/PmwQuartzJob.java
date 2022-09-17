@@ -9,6 +9,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.sterl.training.springquartz.pmw.component.SimpleWorkflowStepStrategy;
+import org.sterl.training.springquartz.pmw.model.AbstractWorkflowContext;
 import org.sterl.training.springquartz.pmw.model.SimpleWorkflowContext;
 import org.sterl.training.springquartz.pmw.model.Workflow;
 
@@ -20,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PmwQuartzJob implements Job {
 
     private final SimpleWorkflowStepStrategy callStrategy;
-    private final Workflow<?> w;
+    private final Workflow<? extends AbstractWorkflowContext> w;
     private final Scheduler scheduler;
     
 
@@ -30,7 +31,7 @@ public class PmwQuartzJob implements Job {
         SimpleWorkflowContext c = new SimpleWorkflowContext();
         c.setNextStep( (Integer)(jobData.getOrDefault("_nextStepId", 0)) );
         
-        boolean hasNext = callStrategy.call( (Workflow<SimpleWorkflowContext>)w, c);
+        boolean hasNext = callStrategy.call((Workflow)w, c);
         
         if (hasNext) {
             try {

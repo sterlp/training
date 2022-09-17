@@ -16,7 +16,6 @@ spring:
       org.quartz.threadPool.threadCount: 10
       org.quartz.plugin.triggHistory.class: org.quartz.plugins.history.LoggingTriggerHistoryPlugin
       org.quartz.plugin.jobHistory.class: org.quartz.plugins.history.LoggingJobHistoryPlugin
-      org.quartz.executionLimit.group_limit_1: 1
 
 
   datasource:
