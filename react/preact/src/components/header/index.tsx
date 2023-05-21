@@ -1,7 +1,12 @@
+import { Signal } from "@preact/signals";
 import { h } from "preact";
 import { Container, Nav, Navbar } from "react-bootstrap";
 
-const Header = () => (
+interface Props {
+  activeUrl: Signal<string>;
+}
+
+const Header = ({ activeUrl }: Props) => (
   <Navbar className="shadow-sm mb-3">
     <Container>
       <Navbar.Brand href="/">
@@ -15,9 +20,18 @@ const Header = () => (
       </Navbar.Brand>
 
       <Nav className="me-auto">
-        <Nav.Link href="/">Home</Nav.Link>
-        <Nav.Link href="/profile">Profiles</Nav.Link>
-        <Nav.Link href="/profile/john">John</Nav.Link>
+        <Nav.Link href="/" active={activeUrl.value == "/"}>
+          Home
+        </Nav.Link>
+        <Nav.Link href="/profile" active={activeUrl.value == "/profile"}>
+          Profiles
+        </Nav.Link>
+        <Nav.Link
+          href="/profile/john"
+          active={activeUrl.value == "/profile/john"}
+        >
+          John
+        </Nav.Link>
       </Nav>
     </Container>
   </Navbar>
