@@ -15,8 +15,8 @@ const Header = ({ activeUrl }: Props) => (
           alt="Preact Logo"
           height="32"
           width="32"
-        />{" "}
-        Preact
+        />
+        PReact
       </Navbar.Brand>
 
       <Nav className="me-auto">
