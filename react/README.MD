@@ -1,7 +1,7 @@
 
 ## Use the fetch API with Singals in a React way
 
-[see](react/preact/src/routes/profile/index.tsx)
+[see Preact Code](./preact/src/routes/profile/index.tsx)
 
 ```typescript
 function useFetch<T>(initialUrl: string, initial: T)
