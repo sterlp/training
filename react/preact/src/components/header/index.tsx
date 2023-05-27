@@ -26,11 +26,8 @@ const Header = ({ activeUrl }: Props) => (
         <Nav.Link href="/profile" active={activeUrl.value == "/profile"}>
           Profiles
         </Nav.Link>
-        <Nav.Link
-          href="/profile/john"
-          active={activeUrl.value == "/profile/john"}
-        >
-          John
+        <Nav.Link href="/todos" active={activeUrl.value == "/todos"}>
+          ToDos
         </Nav.Link>
       </Nav>
     </Container>

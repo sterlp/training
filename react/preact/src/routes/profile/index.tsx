@@ -90,7 +90,7 @@ function useFetch<T>(
         setLoading(false);
       });
     }
-  }, [url.value]);
+  }, [url.value, data, error]);
 
   return [data, isLoading, url];
 }

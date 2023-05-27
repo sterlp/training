@@ -7,6 +7,7 @@ import Header from "./header";
 import Home from "../routes/home";
 import Profile from "../routes/profile";
 import { signal } from "@preact/signals";
+import TodosPage from "src/routes/todos";
 
 const activePath = signal("/");
 
@@ -17,7 +18,7 @@ const App = () => (
       <Router onChange={(e) => (activePath.value = e.url)}>
         <Route path="/" component={Home} />
         <Route path="/profile/" component={Profile} user="me" />
-        <Route path="/profile/:user" component={Profile} />
+        <Route path="/todos" component={TodosPage} />
       </Router>
     </div>
   </div>
