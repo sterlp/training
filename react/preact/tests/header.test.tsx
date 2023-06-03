@@ -1,12 +1,17 @@
-import { h } from 'preact';
-import Header from '../src/components/header';
+import { h } from "preact";
+import Header from "../src/components/header";
 // See: https://github.com/preactjs/enzyme-adapter-preact-pure
-import { shallow } from 'enzyme';
+import { shallow } from "enzyme";
+import { signal } from "@preact/signals";
 
-describe('Initial Test of the Header', () => {
-	test('Header renders 3 nav items', () => {
-		const context = shallow(<Header />);
-		expect(context.find('h1').text()).toBe('Preact CLI');
-		expect(context.find('Link').length).toBe(3);
-	});
+describe("Initial Test of the Header", () => {
+  test("Header renders 3 nav items", () => {
+    // GIVEN
+    const activeUrl = signal("/todos");
+    // WHEN
+    const context = shallow(<Header activeUrl={activeUrl} />);
+    // THEN
+    expect(context.find(".navbar-brand").text()).toContain("PReact");
+    expect(context.find("Link").length).toBe(3);
+  });
 });
