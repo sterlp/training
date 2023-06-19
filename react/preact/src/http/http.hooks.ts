@@ -15,7 +15,15 @@ export interface FetchState<ResultType> {
   result?: ResultType;
   isLoading: boolean;
   hasError: boolean;
-  error: any;
+  error?: any;
+}
+
+export function emptyFetchState<S>(state?: S): FetchState<S> {
+  return {
+    result: state,
+    isLoading: false,
+    hasError: false
+  }
 }
 
 export function fetchReducer<S>(state: FetchState<S>, action: FetchAction<S>): FetchState<S> {
@@ -45,35 +53,26 @@ export function fetchReducer<S>(state: FetchState<S>, action: FetchAction<S>): F
 }
 
 
-export function useFetch<T>(
-    initialUrl: string,
-    initial: T
-  ): [Signal<T>, boolean, Signal<string>] {
-    const [] = useReducer();
-    const url = useSignal<string>(initialUrl);
-    const data = useSignal<T>(initial);
-    const error = useSignal(null);
-    const [isLoading, setLoading] = useState(false);
+export function useFetch<S>(
+    url: string,
+    initial: S
+  ): [Signal<S>, boolean, (url?: string) => Promise<S>] {
+
+    const [state, dispatchState] = useReducer<FetchState<S>, FetchAction<S>, S>(fetchReducer, initial, emptyFetchState);
   
+    const doReload = (newUrl?: string): Promise<S | undefined> => {
+      dispatchState({type: FetchActionType.START});
+      return fetch(newUrl ?? url)
+        .then((r) => r.json())
+        .then((result) => {
+          dispatchState({type: FetchActionType.DONE, result});
+          return result;
+        })
+        .catch((e) => dispatchState({type: FetchActionType.ERROR, error: e}));
+    }
     useEffect(() => {
-      if (url.value && url.value != "") {
-        batch(() => {
-          error.value = null;
-          setLoading(true);
-        });
-        fetch(url.value)
-          .then((r) => r.json())
-          .then((r) => (data.value = r as T))
-          .catch((e) => (error.value = e))
-          .finally(() => setLoading(false));
-      } else {
-        batch(() => {
-          error.value = null;
-          data.value = null;
-          setLoading(false);
-        });
-      }
-    }, [url.value, data, error]);
+      doReload();
+    }, []);
   
-    return [data, isLoading, url];
+    return [state, doReload];
   }
