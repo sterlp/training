@@ -16,7 +16,7 @@ const TodosPage = ({}) => {
           <Alert variant="warning">{JSON.stringify(data.error)}</Alert>
         ) : undefined}
         <ListGroup variant="flush">
-          {data.isLoading || !data.result ? (
+          {data.isLoading ? (
             <LabledSpinner />
           ) : (
             data.result.todos.map((t) => (
