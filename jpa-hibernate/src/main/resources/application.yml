@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:file:./test-db;DB_CLOSE_ON_EXIT=FALSE
