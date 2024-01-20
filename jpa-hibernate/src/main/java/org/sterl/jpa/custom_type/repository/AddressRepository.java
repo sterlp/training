@@ -8,6 +8,7 @@ import org.sterl.jpa.custom_type.model.Address;
 import org.sterl.jpa.custom_type.model.Zip;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
+    
     List<Address> findByZip(Zip zip);
     
     @Query("""

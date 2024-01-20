@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.sterl.jpa.custom_type.model.Address;
+import org.sterl.jpa.custom_type.model.Zip;
 import org.sterl.jpa.custom_type.repository.AddressRepository;
 
 import jakarta.annotation.PostConstruct;
@@ -20,7 +21,7 @@ public class AddressResource {
     
     @PostConstruct
     void init() {
-        addressRepository.save(Address.newAddress("Foo", "80000", "München"));
+        addressRepository.save(Address.newAddress("Foo", new Zip("80000"), "München"));
     }
     @GetMapping
     public List<Address> list() {

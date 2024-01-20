@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import com.hexadevlabs.gpt4all.LLModel;
 
+import lombok.RequiredArgsConstructor;
+
 class TestGpt {
     
     static LLModel.GenerationConfig config = LLModel.config()
@@ -21,7 +23,7 @@ class TestGpt {
 
         try (LLModel model = new LLModel(Path.of(modelFilePath))) {
             model.setThreadCount(Runtime.getRuntime().availableProcessors() / 2);
-            String old = promt("Top 3 Eigenschaften von Angular gegenüber React.", model, null);
+            String old = promt("Top 3 Eigenschaften von Angular gegenüber React, als Tabelle.", model, null);
             old = promt("Welches der Framweworks kann man schneller erlernen?", model, old);
         }
     }
@@ -30,6 +32,15 @@ class TestGpt {
         String prompt = (old != null ? old + "\n" : "") + "### Human:\n" + human + "\n### Assistant:\n";
         prompt += model.generate(prompt, config, true);
         return prompt;
+    }
+    
+    @RequiredArgsConstructor
+    static class Chat {
+        LLModel model;
+        LLModel.GenerationConfig config;
+        
+        public void start() {
+        }
     }
 
 }

@@ -25,8 +25,8 @@ class JpaCustomTypeTests {
     @Test
     void testFindByZip() {
         // GIVEN
-        var address1 = subject.save(Address.newAddress("Foo Street 1", "80000", "München"));
-        subject.save(Address.newAddress("Foo Street 2", "80001", "München"));
+        var address1 = subject.save(Address.newAddress("Foo Street 1", new Zip("80000"), "München"));
+        subject.save(Address.newAddress("Foo Street 2", new Zip("80001"), "München"));
         assertThat(subject.count()).isEqualTo(2);
         
         // WHEN
@@ -38,13 +38,15 @@ class JpaCustomTypeTests {
         assertThat(result.get(0).getZip()).isEqualTo(address1.getZip());
     }
     
+    
+    
 
     @Test
     void testSearch() {
         // GIVEN
-        subject.save(Address.newAddress("Foo Street 1", "80000", "München 1"));
-        subject.save(Address.newAddress("Foo Street 2", "80001", "München 2"));
-        subject.save(Address.newAddress("Foo Street 2", "60000", "Foo"));
+        subject.save(Address.newAddress("Foo Street 1", new Zip("80000"), "München 1"));
+        subject.save(Address.newAddress("Foo Street 2", new Zip("80001"), "München 2"));
+        subject.save(Address.newAddress("Foo Street 2", new Zip("60000"), "Foo"));
 
         // WHEN
         List<Address> result = subject.search("8000%");

@@ -1,5 +1,6 @@
-package org.sterl.jpa.custom_type.model;
+package org.sterl.jpa.embeddable.model;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,26 +10,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * <pre>{@code 
+ * create table person (id bigint not null, city varchar(255), 
+ * street varchar(255), 
+ * zip varchar(255), 
+ * primary key (id))
+ * }
+ * </pre>
+ */
 @Entity
 @NoArgsConstructor @AllArgsConstructor
 @Data
 @Builder
-public class Address {
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     
-    private String street;
-    private Zip zip;
-    private String city;
-    
-    
-    public static Address newAddress(String street, Zip zip, String city) {
-        return Address.builder()
-                .street(street)
-                .zip(zip)
-                .city(city)
-                .build();
-    }
+    @Embedded
+    private EmbeddedAddress address;
 }
