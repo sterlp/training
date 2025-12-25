@@ -3,9 +3,6 @@ package org.sterl.jpa.strong_id;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.sterl.jpa.strong_id.model.Engine;
 import org.sterl.jpa.strong_id.model.EngineId;
 import org.sterl.jpa.strong_id.model.Vehicle;
@@ -38,6 +35,14 @@ class StrongCustomIdTest {
     @Test
     void testSaveVehicleWithEngine() {
         var e = vehicleRepository.save(new Vehicle(new Vin("123459"), "Fahrzeug1", new Engine(null, "Motor1")));
+        System.out.println(e);
+        
+        System.out.println(vehicleRepository.findById(e.getVin()));
+    }
+    
+    @Test
+    void testSaveVehicleWithEngine2() {
+        var e = vehicleRepository.save(new Vehicle(new Vin(), null, "Fahrzeug1", new Engine(null, "Motor1")));
         System.out.println(e);
         
         System.out.println(vehicleRepository.findById(e.getVin()));

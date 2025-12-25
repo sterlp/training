@@ -13,8 +13,8 @@ class AbstractIbmJmsTest {
     protected static final int PORT = 30623;
     protected static final String CHANNEL = "CLOUD.ADMIN.SVRCONN";
     
-    protected static final String APP_USER = "";
-    protected static final String APP_PASSWORD = "";
+    protected static final String APP_USER = "puele";
+    protected static final String APP_PASSWORD = "gBOmtz30BiRxjy5OQKumUE4Vu4p_WDbPdr2dG9D7yKHa";
 
     protected JmsConnectionFactory createConnectionFactory() throws JMSException {
         JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);

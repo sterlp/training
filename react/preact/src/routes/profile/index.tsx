@@ -18,21 +18,17 @@ const Profile = ({ user }: Props) => {
     return () => clearInterval(timer);
   });
 
-  const [data, isLoading, url] = useFetch<Array<any>>(
+  const {data, isLoading, url} = useFetch<Array<any>>(
     "https://jsonplaceholder.typicode.com/todos",
     []
   );
+  console.info("render Profile", new Date());
 
   return (
     <Card>
       <Card.Body>
         <Card.Title>Profile: {user}</Card.Title>
-        <Card.Text>
-          This is the user profile for a user named {user}.
-          <p>Current time: {new Date(time.value).toLocaleString()}</p>
-          <p>Clicked {count} times.</p>
-          <p>{isLoading ? "Loading ..." : "Result: " + data.value.length}</p>
-        </Card.Text>
+        <Foo count={count} data={data} isLoading={isLoading} user={user} />
         <Button
           className="me-1"
           variant="primary"
@@ -63,36 +59,48 @@ const Profile = ({ user }: Props) => {
   );
 };
 
+const Foo = ({user, count, isLoading, data}) => {
+    console.info("Foo rendered", new Date());
+    return (
+        <Card.Text>
+          This is the user profile for a user named {user}.
+          <p>Current time: {new Date(time.value).toLocaleString()}</p>
+          <p>Clicked {count} times.</p>
+          <p>{isLoading ? "Loading ..." : "Result: " + data.value.length}</p>
+        </Card.Text>
+    );
+}
+
 function useFetch<T>(
   initialUrl: string,
   initial: T
-): [Signal<T>, boolean, Signal<string>] {
+)  {
   const url = useSignal(initialUrl);
   const data = useSignal<T>(initial);
   const error = useSignal(null);
-  const [isLoading, setLoading] = useState(false);
+  const isLoading = useSignal(false);
 
   useEffect(() => {
     if (url.value && url.value != "") {
       batch(() => {
         error.value = null;
-        setLoading(true);
+        isLoading.value = false;
       });
       fetch(url.value)
         .then((r) => r.json())
         .then((r) => (data.value = r as T))
         .catch((e) => (error.value = e))
-        .finally(() => setLoading(false));
+        .finally(() => isLoading.value = false);
     } else {
       batch(() => {
         error.value = null;
         data.value = null;
-        setLoading(false);
+        isLoading.value = false;
       });
     }
   }, [url.value, data, error]);
 
-  return [data, isLoading, url];
+  return {data, isLoading, url};
 }
 
 export default Profile;
